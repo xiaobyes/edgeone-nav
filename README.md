@@ -154,23 +154,13 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 
 ---
 
-## 部署到 EdgeOne Makers（GitHub 导入）
+## 部署到 EdgeOne Makers
 
-### 1. 推送到 GitHub
-
-```bash
-cd edgeone-nav
-git init
-git add .
-git commit -m "feat: 小白的导航 EdgeOne Makers 版（Blob 存储）"
-git branch -M main
-git remote add origin https://github.com/<你的账号>/<仓库名>.git
-git push -u origin main
-```
+### 1. FORK本仓库
 
 ### 2. 在 Makers 控制台建项目
 
-打开 [EdgeOne Makers 控制台](https://console.cloud.tencent.com/edgeone/pages)（国际站为 `console.intl.cloud.tencent.com`）→ 新建项目 → 导入 Git 仓库 → 选中刚推送的仓库。
+打开 [EdgeOne Makers 控制台](https://console.cloud.tencent.com/edgeone/pages)（国际站为 `console.intl.cloud.tencent.com`）→ 新建项目 → 导入 Git 仓库 → 选中仓库。
 
 ### 3. 构建配置
 
