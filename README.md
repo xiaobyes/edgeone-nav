@@ -7,8 +7,6 @@
 
 ## 界面预览
 
-以下预览图来自源项目 [lineagett/cf-workers-nav](https://github.com/lineagett/cf-workers-nav)，移植版本 UI 保持一致。
-
 ### 卡片视图
 
 | default | claude |
