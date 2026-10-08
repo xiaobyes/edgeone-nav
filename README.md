@@ -13,17 +13,17 @@
 
 | default | claude |
 |---|---|
-| ![default](./images/default.webp) | ![claude](./images/claude.webp) |
+| ![default](https://github.com/lineagett/cf-workers-nav/raw/lineagett/images/default.webp) | ![claude](https://github.com/lineagett/cf-workers-nav/raw/lineagett/images/claude.webp) |
 
 ### APP 视图
 
 | amethyst-haze | graphite（编辑面板） |
 |---|---|
-| ![amethyst-haze](./images/app_amethyst-haze.webp) | ![graphite](./images/app_edit_graphite.webp) |
+| ![amethyst-haze](https://github.com/lineagett/cf-workers-nav/raw/lineagett/images/app_amethyst-haze.webp) | ![graphite](https://github.com/lineagett/cf-workers-nav/raw/lineagett/images/app_edit_graphite.webp) |
 
 ### 主题面板
 
-![theme-panel](./images/theme-panel.webp)
+![theme-panel](https://github.com/lineagett/cf-workers-nav/raw/lineagett/images/theme-panel.webp)
 
 ---
 
