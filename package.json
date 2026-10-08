@@ -1,0 +1,14 @@
+{
+  "name": "xiaobai-nav-edgeone",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "小白的导航 · EdgeOne Makers 版（Cloud Functions / Node.js 20 + Blob 存储）",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@edgeone/pages-blob": "^0.0.18"
+  }
+}

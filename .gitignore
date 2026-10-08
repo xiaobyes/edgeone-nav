@@ -1,0 +1,11 @@
+# 依赖
+node_modules/
+
+# EdgeOne CLI 本地状态（含登录凭证与项目关联信息，切勿提交）
+.edgeone/
+
+# 构建产物 / 临时文件
+dist/
+*.log
+.DS_Store
+Thumbs.db

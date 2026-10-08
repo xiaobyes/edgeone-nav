@@ -1,0 +1,3015 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小白的导航</title>
+    <link id="site-favicon" rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20128%20128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22grad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20style%3D%22stop-color%3A%2310b981%3Bstop-opacity%3A1%22%20%2F%3E%3Cstop%20offset%3D%22100%25%22%20style%3D%22stop-color%3A%230d9488%3Bstop-opacity%3A1%22%20%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2224%22%20fill%3D%22url%28%23grad%29%22%2F%3E%3Cpath%20d%3D%22M64%2024l12.36%2025.04L104%2054.1l-20%2020.48%204.72%2027.52L64%2088.89%2039.28%20101.1%2044%2073.58%2024%2054.1l27.64-5.06L64%2024z%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        glass: { border: 'rgba(255, 255, 255, 0.2)', darkBorder: 'rgba(255, 255, 255, 0.1)' },
+                        base: { DEFAULT: 'var(--background)', foreground: 'var(--foreground)' },
+                        card: { DEFAULT: 'var(--card)', foreground: 'var(--card-foreground)' },
+                        accent: { DEFAULT: 'var(--primary)', foreground: 'var(--primary-foreground)' },
+                        secondary: { DEFAULT: 'var(--secondary)', foreground: 'var(--secondary-foreground)' },
+                        muted: { DEFAULT: 'var(--muted)', foreground: 'var(--muted-foreground)' },
+                        soft: { DEFAULT: 'var(--accent)', foreground: 'var(--accent-foreground)' },
+                        line: { DEFAULT: 'var(--border)', input: 'var(--input)' },
+                        ring: { DEFAULT: 'var(--ring)' }
+                    },
+                    fontFamily: { sans: 'var(--font-sans)' },
+                    boxShadow: { 'glass': '0 4px 30px rgba(0, 0, 0, 0.1)', 'glass-hover': '0 10px 40px rgba(0, 0, 0, 0.2)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: #ffffff; --foreground: #1e293b;
+            --card: #ffffff;       --card-foreground: #0f172a;
+            --primary: #10b981;    --primary-foreground: #ffffff;
+            --secondary: #f8fafc;  --secondary-foreground: #334155;
+            --muted: #f1f5f9;      --muted-foreground: #64748b;
+            --accent: #ecfdf5;     --accent-foreground: #059669;
+            --accent-soft: rgba(16, 185, 129, 0.1);
+            --border: #e2e8f0;     --input: #cbd5e1;
+            --ring: #10b981;       --radius: 1rem;
+            --menu-hover: color-mix(in srgb, var(--foreground) 8%, var(--card));
+            --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+            --radius-sm: calc(var(--radius) * 0.25);
+            --radius-md: calc(var(--radius) * 0.375);
+            --radius-lg: calc(var(--radius) * 0.5);
+            --radius-xl: calc(var(--radius) * 0.75);
+            --radius-2xl: var(--radius);
+        }
+        .dark {
+            --background: #0f172a; --foreground: #f1f5f9;
+            --card: #1e293b;       --card-foreground: #f8fafc;
+            --primary: #34d399;    --primary-foreground: #064e3b;
+            --secondary: #1e293b;  --secondary-foreground: #cbd5e1;
+            --muted: #1e293b;      --muted-foreground: #94a3b8;
+            --accent: #0f172a;     --accent-foreground: #34d399;
+            --accent-soft: rgba(52, 211, 153, 0.15);
+            --border: #334155;     --input: #475569;
+            --ring: #34d399;
+            --menu-hover: color-mix(in srgb, var(--foreground) 16%, var(--card));
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--foreground) 35%, transparent); }
+        ::selection { background: color-mix(in srgb, var(--primary) 45%, var(--background)); color: var(--foreground); }
+        .loading-spinner-track { border: 4px solid #e2e8f0; }
+        .dark .loading-spinner-track { border-color: #334155; }
+        .loading-spinner-arc { border: 4px solid transparent; border-top-color: var(--primary); }
+        .dark .loading-spinner-arc { border-top-color: var(--primary); }
+        .icon-spinner { border: 2px solid #cbd5e1; border-top-color: var(--primary); }
+        .dark .icon-spinner { border-color: #475569; border-top-color: var(--primary); }
+        @media (max-width: 640px) {
+            ::-webkit-scrollbar { display: none; }
+            * { scrollbar-width: none; }
+        }
+        .card.dragging { opacity: 0.8; transform: scale(1.05); border: 2px dashed var(--primary); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.04); z-index: 50; position: relative; }
+        body.edit-mode .card, body.edit-mode .card:hover { transform: none !important; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05) !important; }
+        html.dark body.edit-mode .card, html.dark body.edit-mode .card:hover { box-shadow: none !important; border-color: rgba(51,65,85,0.5) !important; }
+        .add-card-placeholder { pointer-events: auto !important; z-index: 10; }
+        .card-clone-dragging { pointer-events: none !important; z-index: 9999 !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .dropdown-enter { animation: dropdown-in 0.2s ease-out forwards; }
+        @keyframes dropdown-in { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .overlay-hidden { opacity: 0; pointer-events: none; }
+        .overlay-visible { opacity: 1; pointer-events: auto; }
+        .dialog-scale-hidden { transform: scale(0.95); opacity: 0; }
+        .dialog-scale-visible { transform: scale(1); opacity: 1; }
+        .theme-card { cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+        .theme-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
+        .theme-card-active { box-shadow: 0 0 0 2px var(--ring-color, rgba(99,102,241,0.5)) inset, 0 8px 24px rgba(0,0,0,0.10); }
+        .theme-card-disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+        .section-anchor { scroll-margin-top: 160px; }
+        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-transition: background-color 99999s ease-out; -webkit-transition-delay: 99999s; -webkit-text-fill-color: #475569 !important; }
+        html.dark input:-webkit-autofill, html.dark input:-webkit-autofill:hover, html.dark input:-webkit-autofill:focus, html.dark input:-webkit-autofill:active { -webkit-text-fill-color: #CBD5E1 !important; box-shadow: 0 0 0px 1000px #1e293b inset !important; transition: background-color 5000s ease-in-out 0s; }
+        #custom-tooltip { z-index: 100; transition: opacity 0.1s ease-in-out; }
+        .card-status-tag { display: none; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 2px 8px; border-radius: 9999px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.28s ease; }
+        .card-status-tag.visible { display: inline-flex; opacity: 1; }
+        .card-status-tag.checking { background: rgba(234,179,8,0.15); color: #b45309; }
+        html.dark .card-status-tag.checking { color: #fbbf24; }
+        .card-status-tag.online { background: var(--accent-soft); color: var(--primary); }
+        .card-status-tag.slow { background: rgba(249,115,22,0.15); color: #ea580c; }
+        html.dark .card-status-tag.slow { color: #fb923c; }
+        .card-status-tag.offline { background: rgba(239,68,68,0.15); color: #dc2626; }
+        html.dark .card-status-tag.offline { color: #f87171; }
+        .footer-glow { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 60%; height: 120px; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--primary) 22%, transparent) 0%, transparent 70%); filter: blur(30px); pointer-events: none; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>
+        (function () {
+            const __THEME_ALLOWED = /^(background|foreground|card|card-foreground|primary|primary-foreground|secondary|secondary-foreground|muted|muted-foreground|accent|accent-foreground|border|input|ring|ring-offset|radius|popover|popover-foreground|destructive|destructive-foreground|success|warning|sidebar|sidebar-foreground|sidebar-primary|sidebar-primary-foreground|sidebar-accent|sidebar-accent-foreground|sidebar-border|sidebar-ring|chart-1|chart-2|chart-3|chart-4|chart-5|shadow-color|font-sans|font-serif|font-mono|font-family)$/;
+            const __SAFE_CSS_VALUE = /^[a-zA-Z0-9#%.,()/ '"_+-]{1,160}$/;
+            function __safeCssValue(v) { const s = String(v == null ? '' : v).trim(); return __SAFE_CSS_VALUE.test(s) ? s : ''; }
+            const __THEME_KEY = /^[a-z0-9-]{1,40}$/i;
+            function __sanitizeLayer(src, limit) {
+                const out = {}; let n = 0;
+                if (!src || typeof src !== 'object' || Array.isArray(src)) return { layer: out, n: 0 };
+                const keys = Object.keys(src);
+                for (let i = 0; i < keys.length && n < limit; i++) {
+                    const k = keys[i];
+                    if (!__THEME_KEY.test(k) || !__THEME_ALLOWED.test(k)) continue;
+                    const v = src[k];
+                    if (typeof v !== 'string') continue;
+                    const sv = v.trim();
+                    if (!sv || sv.length > 160) continue;
+                    out[k] = sv; n++;
+                }
+                return { layer: out, n: n };
+            }
+            window.__sanitizeThemeData = function (raw) {
+                const empty = { data: null, validCount: 0, name: '' };
+                if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return empty;
+                let src = raw;
+                if (raw.data && typeof raw.data === 'object' && !Array.isArray(raw.data)) src = raw.data;
+                else if (raw.cssVars && typeof raw.cssVars === 'object' && !Array.isArray(raw.cssVars)) src = raw.cssVars;
+                const data = {}; let validCount = 0;
+                const layers = ['light', 'dark', 'theme'];
+                for (let i = 0; i < layers.length; i++) {
+                    const r = __sanitizeLayer(src[layers[i]], 64);
+                    if (r.n) data[layers[i]] = r.layer;
+                    validCount += r.n;
+                }
+                const fonts = src.fonts;
+                if (fonts && typeof fonts === 'object' && !Array.isArray(fonts)) {
+                    const sans = fonts.sans || fonts.fontSans || fonts.fontFamily;
+                    if (typeof sans === 'string' && sans.length <= 160) { data.fonts = { sans: sans }; validCount++; }
+                }
+                const name = typeof raw.name === 'string' ? raw.name.split('').filter(function(ch){ var c = ch.charCodeAt(0); return c >= 32 && c !== 127; }).join('').trim().slice(0, 64) : '';
+                if (!validCount) return { data: null, validCount: 0, name: name };
+                if (!data.light && !data.dark) {
+                    if (!data.theme) return { data: null, validCount: 0, name: name };
+                    data.light = Object.assign({}, data.theme);
+                    data.dark = Object.assign({}, data.theme);
+                }
+                return { data: data, validCount: validCount, name: name };
+            };
+            function __lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
+            function __lsDel(k) { try { localStorage.removeItem(k); } catch (e) { } }
+            function __appendFontStylesheet(link, href) {
+                link.rel = 'stylesheet'; link.media = 'print';
+                link.onload = function () { link.media = 'all'; link.onload = null; };
+                link.onerror = function () { if (link.parentNode) link.parentNode.removeChild(link); };
+                link.href = href; document.head.appendChild(link);
+            }
+            window.__loadGoogleFont = function (family) {
+                if (family) {
+                    try {
+                        const name = family.split(',')[0].replace(/["']/g, '').trim();
+                        if (name && /^[A-Za-z0-9 _-]+$/.test(name)) {
+                            document.querySelectorAll('link[data-theme-font][data-family="' + name.replace(/"/g, '') + '"]').forEach(el => el.remove());
+                            const link = document.createElement('link');
+                            link.setAttribute('data-theme-font', '1');
+                            link.setAttribute('data-family', name.replace(/"/g, ''));
+                            __appendFontStylesheet(link, 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(name).replace(/%20/g, '+') + ':wght@400;500;600;700&display=swap');
+                        }
+                    } catch (e) { }
+                }
+                try {
+                    let has = false;
+                    document.querySelectorAll('link[data-theme-font]').forEach(el => { if (el.getAttribute('data-family') === 'Noto Sans SC') has = true; });
+                    if (!has) {
+                        const link = document.createElement('link');
+                        link.setAttribute('data-theme-font', '1');
+                        link.setAttribute('data-family', 'Noto Sans SC');
+                        __appendFontStylesheet(link, 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+                    }
+                } catch (e) { }
+            };
+            function __ensureCnFallback(stack) {
+                if (!stack) return stack;
+                if (/Noto Sans SC|PingFang|YaHei|Microsoft Yahei|Heiti|Hanzi|CN|SC/i.test(stack)) return stack;
+                return String(stack).replace(/[, ]*sans-serif$/i, '') + ", 'Noto Sans SC', sans-serif";
+            }
+            window.__applyThemeVars = function (themeData, isDark) {
+                document.querySelectorAll('[data-theme-var]').forEach(el => el.remove());
+                if (!themeData) return;
+                const layer = (isDark ? themeData.dark : themeData.light) || themeData.light || {};
+                const set = Object.assign({}, layer);
+                {
+                    let fv = set['font-sans'] || set['fontSans'] || set['fontFamily'] || set['font'];
+                    if (!fv && themeData.fonts) { const fo = themeData.fonts; fv = fo.sans || fo.fontSans || fo.fontFamily || fo.font; }
+                    if (fv) { fv = __ensureCnFallback(fv); set['font-sans'] = fv; set['font-family'] = fv; window.__loadGoogleFont(fv); }
+                }
+                const parts = [];
+                for (const [k, v] of Object.entries(set)) {
+                    if (!__THEME_ALLOWED.test(k)) continue;
+                    const sv = __safeCssValue(v);
+                    if (!sv) continue;
+                    if (k === 'radius' && /^[, ]*0(px|rem)?[, ]*$/.test(sv)) continue;
+                    parts.push('--' + k + ':' + sv);
+                }
+                const fg = __safeCssValue(set['foreground']) || 'var(--foreground)';
+                const card = __safeCssValue(set['card']) || 'var(--card)';
+                const primary = __safeCssValue(set['primary']) || 'var(--primary)';
+                parts.push('--menu-hover:color-mix(in oklab,' + fg + ' 10%,' + card + ')');
+                parts.push('--accent-soft:color-mix(in oklab,' + primary + ' 12%,' + card + ')');
+                if (!parts.length) return;
+                const style = document.createElement('style');
+                style.setAttribute('data-theme-var', '1');
+                style.textContent = ':root{' + parts.join(';') + '}';
+                document.head.appendChild(style);
+            };
+            let _tdRaw, _tdObj, _tdHas = false;
+            window.__getThemeData = function () {
+                let raw;
+                try { raw = localStorage.getItem('themeData'); } catch (e) { return null; }
+                if (_tdHas && raw === _tdRaw) return _tdObj;
+                _tdHas = true; _tdRaw = raw;
+                try { _tdObj = JSON.parse(raw || 'null'); } catch (e) { _tdObj = null; }
+                return _tdObj;
+            };
+            let isDark;
+            const savePreferences = localStorage.getItem('savePreferences');
+            if (savePreferences === 'true') { const savedTheme = localStorage.getItem('theme'); isDark = savedTheme === 'dark'; }
+            else { isDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+            window.isDarkTheme = isDark;
+            if (isDark) document.documentElement.classList.add('dark');
+            window.__PUBLISHED_THEME = null;
+            try {
+                if (window.__getThemeData()) window.__applyThemeVars(window.__getThemeData(), isDark);
+            } catch (e) { }
+            window.__pullPublishedTheme = function () {
+                try {
+                    if (localStorage.getItem('themePersonal') === '1') return;
+                } catch (e) { return; }
+                fetch('/api/getTheme', { cache: 'no-store' })
+                    .then(function (r) { return r.ok ? r.json() : null; })
+                    .then(function (j) {
+                        var t = j && j.theme;
+                        if (!t || t.updatedAt == null) return;
+                        var localUp = Number(localStorage.getItem('themeUpdatedAt') || 0);
+                        if (Number(t.updatedAt) <= localUp) return;
+                        try {
+                            if (t.themeData) {
+                                __lsSet('themeData', JSON.stringify(t.themeData));
+                                if (t.name) __lsSet('themeName', t.name);
+                                __lsSet('themeKind', t.kind || 'custom');
+                                if (t.source) __lsSet('themeSource', t.source);
+                                window.__applyThemeVars(t.themeData, !!window.isDarkTheme);
+                            } else {
+                                __lsDel('themeData'); __lsDel('themeName'); __lsDel('themeKind'); __lsDel('themeSource');
+                                window.__applyThemeVars(null, !!window.isDarkTheme);
+                            }
+                            __lsSet('themeUpdatedAt', String(t.updatedAt));
+                            __lsSet('themePersonal', '0');
+                            if (typeof refreshThemeUI === 'function') { try { refreshThemeUI(); } catch (e) { } }
+                        } catch (e) { }
+                    })
+                    .catch(function () { });
+            };
+            window.__pullPublishedTheme();
+        })();
+    </script>
+</head>
+<body class="min-h-screen font-sans text-base-foreground transition-colors duration-300">
+    <div class="fixed inset-0 -z-10 h-full w-full overflow-hidden bg-base dark:bg-base">
+        <div class="absolute top-[-5%] left-[-10%] w-[800px] h-[800px] bg-[color-mix(in_oklab,color-mix(in_oklab,var(--primary)_45%,var(--background))_30%,transparent)] dark:bg-[color-mix(in_oklab,color-mix(in_oklab,var(--primary)_25%,var(--background))_30%,transparent)] rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-300/30 dark:bg-purple-600/20 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="backdrop-blur-md bg-[color-mix(in_oklab,var(--background)_80%,transparent)] dark:bg-[color-mix(in_oklab,var(--background)_85%,transparent)] border-b border-[color-mix(in_oklab,var(--border)_40%,transparent)] shadow-sm [transform:translateZ(0)]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16 gap-4">
+                    <a class="flex items-center gap-2 flex-shrink-0 group cursor-pointer bg-[color-mix(in_oklab,var(--card)_45%,transparent)] dark:bg-transparent hover:bg-[color-mix(in_oklab,var(--card)_75%,transparent)] dark:hover:bg-card px-3 py-1.5 rounded-xl border border-[color-mix(in_oklab,var(--border)_50%,transparent)] dark:border-transparent transition-all duration-300 hover:shadow-md hover:shadow-accent/10 hover:-translate-y-0.5" href="#" onclick="location.reload()">
+                        <div id="site-logo-icon" class="w-8 h-8 flex items-center justify-center bg-gradient-to-tr from-accent to-teal-600 rounded-lg text-white shadow-lg shadow-accent/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        </div>
+                        <span class="font-bold text-lg tracking-wide text-base-foreground hidden sm:block">小白的导航</span>
+                    </a>
+
+                    <div class="flex-1 max-w-2xl mx-auto">
+                        <div class="relative flex items-center w-full h-10 rounded-[var(--radius-xl)] focus-within:ring-2 focus-within:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] focus-within:shadow-lg focus-within:-translate-y-0.5 bg-card dark:bg-card border border-line dark:border-line-input shadow-sm hover:shadow-lg transition-all duration-300">
+                            <div class="relative h-full" id="search-engine-wrapper">
+                                <button id="search-engine-btn" class="h-full pl-3 pr-2 flex items-center gap-2 text-sm text-muted-foreground hover:text-accent hover:bg-muted dark:hover:bg-[color-mix(in_oklab,var(--muted)_60%,transparent)] rounded-l-[var(--radius-xl)] transition-colors outline-none w-auto md:min-w-[5.5rem]">
+                                    <span id="current-engine-icon" class="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                                        <svg width="16" height="16" viewBox="0 0 256 262"><path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"/><path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"/><path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"/><path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"/></svg>
+                                    </span>
+                                    <span id="current-engine-label" class="font-medium truncate hidden md:block">谷歌</span>
+                                    <svg class="w-3 h-3 opacity-60 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div id="search-engine-menu" class="hidden absolute top-full left-0 mt-2 w-24 bg-card dark:bg-card rounded-[var(--radius-xl)] shadow-xl border border-line dark:border-line overflow-hidden z-50 dropdown-enter">
+                                    <div class="py-1" id="search-engine-list">
+                                        <div class="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">搜索引擎</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="h-4 w-px bg-line-input dark:bg-line-input mx-1"></div>
+                            <input type="text" id="search-input" class="flex-1 bg-transparent border-none text-base-foreground dark:text-white text-sm focus:ring-0 placeholder:text-muted-foreground h-full w-full outline-none px-2" placeholder="搜索">
+                            <button id="clear-search-button" class="hidden p-1.5 mr-1 rounded-full text-muted-foreground hover:text-red-500 hover:bg-muted dark:hover:bg-muted transition-all">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                            </button>
+                            <button id="search-button" class="h-full px-4 rounded-r-[var(--radius-xl)] text-muted-foreground hover:text-accent dark:hover:text-accent hover:bg-soft dark:hover:bg-[color-mix(in_oklab,var(--muted)_60%,transparent)] transition-colors border-l border-transparent dark:border-[color-mix(in_oklab,var(--border)_50%,transparent)] flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative flex items-center gap-2">
+                        <div id="profile-dropdown-wrapper" class="relative">
+                            <button id="profile-menu-toggle" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-muted-foreground hover:bg-[color-mix(in_oklab,var(--card)_75%,transparent)] dark:hover:bg-muted transition-all text-sm font-medium border border-transparent hover:border-line dark:hover:border-line hover:shadow-sm">
+                                <div class="w-7 h-7 rounded-full bg-muted dark:bg-muted flex items-center justify-center shadow-inner">
+                                    <svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                                <span id="menu-toggle" class="hidden md:inline">设置</span>
+                            </button>
+                            <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-60 bg-card rounded-xl shadow-xl ring-1 ring-black/5 dark:ring-white/10 overflow-hidden transform origin-top-right transition-all z-50 dropdown-enter">
+                                <div class="p-2 space-y-1">
+                                    <button id="edit-mode-btn" onclick="toggleEditMode()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-accent transition-colors flex items-center gap-3 font-medium">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                        编辑模式
+                                    </button>
+                                    <div id="check-all-menu" class="hidden">
+                                        <div class="h-px bg-muted dark:bg-[color-mix(in_oklab,var(--muted)_50%,transparent)] mx-1 my-1"></div>
+                                        <button id="check-all-btn" onclick="checkAllSites()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-accent transition-colors flex items-center justify-between gap-3 font-medium">
+                                            <span class="flex items-center gap-3">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                                一键检测
+                                            </span>
+                                            <span id="check-all-status" class="text-xs font-normal text-muted-foreground"></span>
+                                        </button>
+                                    </div>
+                                    <div id="site-icon-settings-menu" class="hidden">
+                                        <div class="h-px bg-muted dark:bg-[color-mix(in_oklab,var(--muted)_50%,transparent)] mx-1 my-1"></div>
+                                        <button onclick="openSiteIconSettings()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-accent transition-colors flex items-center gap-3 font-medium">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><circle cx="12" cy="8" r="1.5" fill="currentColor"></circle></svg>
+                                            本站图标设置
+                                        </button>
+                                    </div>
+                                    <div id="data-tools-menu" class="hidden">
+                                        <div class="h-px bg-muted dark:bg-[color-mix(in_oklab,var(--muted)_50%,transparent)] mx-1 my-1"></div>
+                                        <button onclick="exportData()" class="w-full text-left px-3 py-2 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-amber-600 transition-colors flex items-center gap-3">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                            导出配置
+                                        </button>
+                                        <button onclick="importData()" class="w-full text-left px-3 py-2 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-green-600 transition-colors flex items-center gap-3">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12"></path></svg>
+                                            导入配置
+                                        </button>
+                                        <input type="file" id="import-file-input" accept=".json,.html,.htm" class="hidden">
+                                    </div>
+                                    <div class="h-px bg-muted dark:bg-[color-mix(in_oklab,var(--muted)_50%,transparent)] mx-1 my-1"></div>
+                                    <button id="theme-menu-btn" onclick="openThemeDialog()" class="flex w-full text-left px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-[var(--menu-hover)] hover:text-accent transition-colors items-center gap-3">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a1 1 0 0 1 1 1v.5a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1zm8 9a1 1 0 0 1-1 1h-.5a1 1 0 0 1 0-2H19a1 1 0 0 1 1 1zM5 12a1 1 0 0 1-1 1h-.5a1 1 0 0 1 0-2H4a1 1 0 0 1 1 1z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/><path d="M12 2v2M12 20v2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+                                        主题皮肤
+                                        <svg class="w-3.5 h-3.5 ml-auto text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                    <div class="px-3 py-2.5 flex items-center justify-between text-sm text-base-foreground hover:bg-[var(--menu-hover)] rounded-lg group">
+                                        <span class="flex items-center gap-3">
+                                            <svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                            APP 视图
+                                        </span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="layout-switch-checkbox" onchange="toggleAppLayout()" class="sr-only peer">
+                                            <div class="w-9 h-5 bg-[color-mix(in_oklab,var(--foreground)_35%,var(--card))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] peer-checked:bg-accent"></div>
+                                        </label>
+                                    </div>
+                                    <div class="px-3 py-2.5 flex items-center justify-between text-sm text-base-foreground hover:bg-[var(--menu-hover)] rounded-lg group">
+                                        <span class="flex items-center gap-3">
+                                            <svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                            深色模式
+                                        </span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="theme-switch-checkbox" class="sr-only peer">
+                                            <div class="w-9 h-5 bg-[color-mix(in_oklab,var(--foreground)_35%,var(--card))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] peer-checked:bg-accent"></div>
+                                        </label>
+                                    </div>
+                                    <div class="px-3 py-2.5 flex items-center justify-between text-sm text-base-foreground hover:bg-[var(--menu-hover)] rounded-lg group">
+                                        <span class="flex items-center gap-3">
+                                            <svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                            记住设置
+                                        </span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="save-preference-checkbox" class="sr-only peer">
+                                            <div class="w-9 h-5 bg-[color-mix(in_oklab,var(--foreground)_35%,var(--card))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] peer-checked:bg-accent"></div>
+                                        </label>
+                                    </div>
+                                    <div class="h-px bg-muted dark:bg-[color-mix(in_oklab,var(--muted)_50%,transparent)] mx-1 my-1"></div>
+                                    <button id="guest-login-Btn" onclick="toggleGuestLogin()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-accent transition-colors flex items-center gap-3 font-medium">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                        访客登录
+                                    </button>
+                                    <button id="login-Btn" onclick="toggleLogin()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-base-foreground hover:bg-[var(--menu-hover)] hover:text-red-500 transition-colors flex items-center gap-3 font-medium">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                        登录 / 退出
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen">
+        <div id="add-category-container" class="hidden mt-12 mb-8">
+            <button onclick="addCategory()" class="w-full py-4 rounded-[var(--radius-2xl)] border-2 border-dashed border-line dark:border-line text-muted-foreground hover:border-accent hover:text-accent hover:bg-[color-mix(in_oklab,var(--accent)_50%,transparent)] transition-all flex items-center justify-center gap-2 group">
+                <div class="w-8 h-8 rounded-full bg-muted group-hover:bg-soft flex items-center justify-center transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <span class="font-medium text-lg">新建分类</span>
+            </button>
+        </div>
+
+        <div id="sections-container" class="space-y-10"></div>
+
+        <div class="fixed bottom-8 right-8 z-50">
+            <button id="back-to-top-btn" onclick="scrollToTop()" class="hidden w-12 h-12 rounded-2xl bg-[color-mix(in_oklab,var(--card)_90%,var(--background))] text-muted-foreground border border-line shadow-lg backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110 hover:bg-muted has-tooltip group" data-tooltip="返回顶部">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+            </button>
+        </div>
+    </main>
+
+    <footer class="relative mt-4 border-t border-[color-mix(in_oklab,var(--border)_50%,transparent)] bg-[color-mix(in_oklab,var(--card)_60%,transparent)] backdrop-blur-md overflow-hidden">
+        <div class="footer-glow"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2.5">
+                        <div id="footer-logo-icon" class="w-9 h-9 flex items-center justify-center bg-gradient-to-tr from-accent to-teal-600 rounded-xl text-white shadow-lg shadow-accent/30 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        </div>
+                        <span class="font-bold text-lg tracking-wide text-base-foreground">小白的导航</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground leading-relaxed max-w-xs">简洁优雅的个人导航站，收藏每一个值得访问的角落。</p>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="text-sm font-semibold text-base-foreground tracking-wide flex items-center gap-2">
+                        <span class="w-1 h-4 bg-accent rounded-full inline-block"></span>
+                        站点统计
+                    </h4>
+                    <div class="flex items-center gap-10">
+                        <div>
+                            <div id="footer-site-count" class="text-3xl font-bold text-accent tabular-nums leading-none">--</div>
+                            <div class="text-xs text-muted-foreground mt-2 tracking-wide">收录站点</div>
+                        </div>
+                        <div class="w-px h-10 bg-[color-mix(in_oklab,var(--border)_70%,transparent)]"></div>
+                        <div>
+                            <div id="footer-category-count" class="text-3xl font-bold text-accent tabular-nums leading-none">--</div>
+                            <div class="text-xs text-muted-foreground mt-2 tracking-wide">分类数量</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="text-sm font-semibold text-base-foreground tracking-wide flex items-center gap-2">
+                        <span class="w-1 h-4 bg-accent rounded-full inline-block"></span>
+                        快捷入口
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="scrollToTop()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--radius-xl)] text-xs font-medium text-muted-foreground bg-[color-mix(in_oklab,var(--muted)_70%,transparent)] border border-[color-mix(in_oklab,var(--border)_60%,transparent)] hover:text-accent hover:border-accent hover:bg-soft transition-all duration-200 hover:-translate-y-0.5">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+                            返回顶部
+                        </button>
+                        <button onclick="openThemeDialog()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[var(--radius-xl)] text-xs font-medium text-muted-foreground bg-[color-mix(in_oklab,var(--muted)_70%,transparent)] border border-[color-mix(in_oklab,var(--border)_60%,transparent)] hover:text-accent hover:border-accent hover:bg-soft transition-all duration-200 hover:-translate-y-0.5">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="14.5" r="2.5"></circle><circle cx="8.5" cy="17.5" r="2.5"></circle><circle cx="6.5" cy="9.5" r="2.5"></circle></svg>
+                            主题皮肤
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10 pt-6 border-t border-[color-mix(in_oklab,var(--border)_50%,transparent)] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p class="text-xs text-muted-foreground tracking-wide">© <span id="footer-year">2025</span> 小白的导航 · All rights reserved</p>
+                <p class="text-xs text-muted-foreground flex items-center gap-1.5 tracking-wide">Made with <span class="text-red-500 animate-pulse">♥</span> · Powered by <span class="font-medium text-base-foreground">Cloudflare Workers</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="dialog-overlay" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="dialog-box" class="bg-card rounded-[var(--radius-2xl)] shadow-2xl w-full max-w-md p-6 transform transition-all duration-300 border border-line dialog-scale-hidden">
+            <h3 class="text-xl font-bold mb-5 text-base-foreground flex items-center gap-2">
+                <span class="w-1 h-6 bg-accent rounded-full"></span>
+                编辑信息
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">名称 <span class="text-red-500">*</span></label>
+                    <input type="text" id="name-input" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] focus:border-accent outline-none transition-all dark:text-white" placeholder="网站名称">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">地址 <span class="text-red-500">*</span></label>
+                    <input type="text" id="url-input" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] focus:border-accent outline-none transition-all dark:text-white" placeholder="https://...">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">描述</label>
+                    <input type="text" id="tips-input" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] focus:border-accent outline-none transition-all dark:text-white" placeholder="简短的描述...">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">图标 URL</label>
+                    <input type="text" id="icon-input" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] focus:border-accent outline-none transition-all dark:text-white" placeholder="留空自动获取">
+                </div>
+                <div class="relative z-20" id="category-select-wrapper">
+                    <label class="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">分类</label>
+                    <input type="hidden" id="category-select-value">
+                    <button id="category-select-btn" class="w-full px-4 py-2.5 text-left rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] outline-none transition-all text-base-foreground dark:text-white flex items-center justify-between">
+                        <span id="category-select-text">请选择分类</span>
+                        <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="category-select-menu" class="hidden absolute top-full left-0 mt-2 w-full max-h-48 overflow-y-auto bg-card rounded-xl shadow-xl border border-line z-50"></div>
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="private-checkbox" class="sr-only peer">
+                        <div class="w-9 h-5 bg-[color-mix(in_oklab,var(--foreground)_35%,var(--card))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[color-mix(in_oklab,var(--muted-foreground)_40%,var(--card))] after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent"></div>
+                    </label>
+                    <label for="private-checkbox" class="text-sm text-muted-foreground font-medium cursor-pointer select-none">设为私密链接 (仅登录可见)</label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-8">
+                <button id="dialog-cancel-btn" class="px-5 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium text-muted-foreground hover:bg-muted transition-colors">取消</button>
+                <button id="dialog-confirm-btn" class="px-5 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium text-accent-foreground bg-accent shadow-lg shadow-accent/25 transition-all hover:translate-y-[-1px]">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="site-icon-settings-overlay" class="fixed inset-0 z-[85] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="site-icon-settings-box" class="bg-card rounded-[var(--radius-2xl)] shadow-2xl w-full max-w-md p-6 transform transition-all duration-300 border border-line dialog-scale-hidden">
+            <h3 class="text-xl font-bold mb-5 text-base-foreground flex items-center gap-2">
+                <span class="w-1 h-6 bg-accent rounded-full"></span>
+                本站图标设置
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">图标 URL</label>
+                    <input type="text" id="site-icon-url-input" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] focus:border-accent outline-none transition-all dark:text-white" placeholder="留空使用默认图标">
+                    <p class="text-xs text-muted-foreground mt-2">支持 http/https 图片地址；留空则恢复默认星星图标。设置后左上角 Logo、页脚图标和浏览器地址栏图标会同步生效。</p>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-8">
+                <button id="site-icon-settings-cancel-btn" class="px-5 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium text-muted-foreground hover:bg-muted transition-colors">取消</button>
+                <button id="site-icon-settings-save-btn" class="px-5 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium text-accent-foreground bg-accent shadow-lg shadow-accent/25 transition-all hover:translate-y-[-1px]">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="password-dialog-overlay" class="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="password-dialog-box" class="bg-card rounded-[var(--radius-2xl)] shadow-2xl p-8 w-full max-w-sm border border-line text-center transform transition-all duration-300 dialog-scale-hidden">
+            <div class="w-16 h-16 bg-soft rounded-full flex items-center justify-center mx-auto mb-4 text-accent">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-base-foreground">身份验证</h3>
+            <p id="password-dialog-hint" class="text-sm text-muted-foreground mb-6">请输入管理员密码以继续操作</p>
+            <input type="password" id="password-input" placeholder="访问密码" class="w-full px-4 py-3 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-ring outline-none mb-6 dark:text-white text-center tracking-widest text-lg transition-all">
+            <div class="flex gap-3">
+                <button id="password-cancel-btn" class="flex-1 py-2.5 rounded-[var(--radius-xl)] text-muted-foreground bg-muted hover:bg-secondary font-medium transition-colors">取消</button>
+                <button id="password-confirm-btn" class="flex-1 py-2.5 rounded-[var(--radius-xl)] text-accent-foreground bg-accent shadow-lg shadow-accent/25 font-medium transition-colors">确认登录</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-alert-overlay" class="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="custom-alert-box" class="bg-card rounded-[var(--radius-2xl)] shadow-2xl p-6 max-w-sm w-full border border-line transform transition-all duration-300 dialog-scale-hidden">
+            <h3 id="custom-alert-title" class="text-lg font-bold mb-2 text-base-foreground">提示</h3>
+            <p id="custom-alert-content" class="text-muted-foreground mb-6 text-sm leading-relaxed"></p>
+            <div class="flex justify-end">
+                <button id="custom-alert-confirm" class="px-5 py-2 bg-accent text-accent-foreground rounded-[var(--radius-xl)] text-sm font-medium transition-colors shadow-lg shadow-accent/20">我知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-confirm-overlay" class="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="custom-confirm-box" class="bg-card rounded-[var(--radius-2xl)] shadow-2xl p-6 max-w-sm w-full border border-line transform transition-all duration-300 dialog-scale-hidden">
+            <h3 class="text-lg font-bold mb-3 text-base-foreground">确认操作</h3>
+            <p id="custom-confirm-message" class="text-muted-foreground mb-6 text-sm"></p>
+            <div class="flex justify-end gap-3">
+                <button id="custom-confirm-cancel" class="px-4 py-2 text-sm text-muted-foreground hover:bg-muted rounded-[var(--radius-xl)] transition-colors font-medium">取消</button>
+                <button id="custom-confirm-ok" class="px-4 py-2 text-sm text-accent-foreground bg-accent rounded-[var(--radius-xl)] shadow-lg shadow-accent/20 transition-colors font-medium">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="category-dialog" class="fixed inset-0 z-[65] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="category-dialog-box" class="bg-card rounded-[var(--radius-2xl)] p-6 w-full max-w-sm shadow-2xl border border-line transform transition-all duration-300 dialog-scale-hidden">
+            <h3 id="category-dialog-title" class="text-lg font-bold mb-4 text-base-foreground">分类名称</h3>
+            <input type="text" id="category-name-input" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line focus:ring-2 focus:ring-ring outline-none mb-6 dark:text-white transition-all" placeholder="输入分类名称">
+            <div class="flex justify-end gap-3">
+                <button id="category-cancel-btn" class="px-4 py-2 text-sm rounded-[var(--radius-xl)] text-muted-foreground bg-muted hover:bg-secondary font-medium">取消</button>
+                <button id="category-confirm-btn" class="px-4 py-2 text-sm rounded-[var(--radius-xl)] text-accent-foreground bg-accent shadow-md font-medium">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="theme-dialog-overlay" class="fixed inset-0 z-[90] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="theme-dialog-box" class="bg-card rounded-[var(--radius-2xl)] shadow-2xl w-full max-w-2xl h-[92vh] max-h-[760px] flex flex-col border border-line transition-all duration-300 transform">
+            <div class="px-5 py-3.5 flex items-center justify-between border-b border-[color-mix(in_oklab,var(--border)_40%,transparent)] shrink-0">
+                <h3 class="text-lg font-bold text-base-foreground flex items-center gap-2">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a1 1 0 0 1 1 1v.5a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1zm8 9a1 1 0 0 1-1 1h-.5a1 1 0 0 1 0-2H19a1 1 0 0 1 1 1zM5 12a1 1 0 0 1-1 1h-.5a1 1 0 0 1 0-2H4a1 1 0 0 1 1 1z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
+                    主题皮肤
+                </h3>
+                <button id="theme-dialog-close" onclick="closeThemeDialog()" aria-label="关闭" class="p-2 rounded-full text-muted-foreground hover:bg-muted transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex-1 min-h-0 flex flex-col overflow-hidden p-5 pt-3">
+                <div id="theme-status-bar" class="mb-3 shrink-0"></div>
+                <div class="mb-2 flex items-center justify-between shrink-0">
+                    <h4 class="text-sm font-semibold text-base-foreground">推荐主题</h4>
+                    <span id="theme-kind-toggle" class="text-xs text-muted-foreground"></span>
+                </div>
+                <p id="theme-guide" class="text-xs text-muted-foreground mb-2 shrink-0"></p>
+                <div id="theme-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 flex-1 min-h-0 overflow-y-auto px-1 py-1 no-scrollbar content-start"></div>
+                <div id="theme-custom-details" class="mt-4 shrink-0 border border-[color-mix(in_oklab,var(--border)_40%,transparent)] rounded-[var(--radius-xl)]">
+                    <div class="px-4 py-2.5 text-sm font-medium text-base-foreground">tweakcn 主题</div>
+                    <div class="px-4 pb-4">
+                        <div class="relative mb-2">
+                            <input type="text" id="theme-input" placeholder="粘贴主题ID 或完整链接 themes/xxx" class="w-full min-w-0 pl-4 pr-[72px] py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line-input focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] outline-none transition-all text-base-foreground dark:text-white">
+                            <button onclick="applyCustomTheme()" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-[var(--radius-lg)] text-sm font-medium text-accent-foreground bg-accent shadow-lg shadow-accent/20 transition-all">应用</button>
+                        </div>
+                        <p id="theme-status" class="hidden text-xs mb-2 text-muted-foreground"></p>
+                        <a href="https://tweakcn.com/community" target="_blank" rel="noopener" class="text-xs text-accent hover:underline inline-flex items-center gap-1">更多主题：tweakcn.com/community ↗</a>
+                    </div>
+                </div>
+                <div id="theme-json-details" class="mt-4 shrink-0 border border-[color-mix(in_oklab,var(--border)_40%,transparent)] rounded-[var(--radius-xl)]">
+                    <div class="px-4 py-2.5 text-sm font-medium text-base-foreground">导入 / 导出主题</div>
+                    <div class="px-4 pb-4">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <button onclick="openThemeExportDialog()" class="flex-1 min-w-[130px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium border border-line text-base-foreground hover:bg-secondary transition-all">导出主题</button>
+                            <button onclick="openThemeImportDialog()" class="flex-1 min-w-[130px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium border border-line text-base-foreground hover:bg-secondary transition-all">导入主题</button>
+                        </div>
+                        <p id="theme-json-entry-status" class="hidden mt-2 text-xs"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="theme-export-overlay" class="fixed inset-0 z-[95] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="theme-export-box" class="bg-card rounded-[var(--radius-2xl)] p-6 w-full max-w-md shadow-2xl border border-line transform transition-all duration-300 dialog-scale-hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-base-foreground">导出主题</h3>
+                <button onclick="closeThemeExportDialog()" aria-label="关闭" class="p-1.5 rounded-full text-muted-foreground hover:bg-muted transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <textarea id="theme-export-text" rows="8" readonly spellcheck="false" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line-input text-xs font-mono leading-relaxed text-base-foreground dark:text-white resize-y mb-3"></textarea>
+            <p id="theme-export-status" class="hidden text-xs mb-2"></p>
+            <div class="flex gap-2">
+                <button onclick="copyThemeJson()" class="flex-1 px-4 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium border border-line text-base-foreground hover:bg-secondary transition-colors">复制 JSON</button>
+                <button onclick="downloadThemeJson()" class="flex-1 px-4 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium text-accent-foreground bg-accent transition-all">下载文件</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="theme-import-overlay" class="fixed inset-0 z-[95] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 overlay-hidden hidden">
+        <div id="theme-import-box" class="bg-card rounded-[var(--radius-2xl)] p-6 w-full max-w-md shadow-2xl border border-line transform transition-all duration-300 dialog-scale-hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-base-foreground">导入主题</h3>
+                <button onclick="closeThemeImportDialog()" aria-label="关闭" class="p-1.5 rounded-full text-muted-foreground hover:bg-muted transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <textarea id="theme-import-text" rows="8" spellcheck="false" placeholder="粘贴主题 JSON 数据，或点击下方「选择文件」" class="w-full px-4 py-2.5 rounded-[var(--radius-xl)] bg-muted border border-line-input focus:ring-2 focus:ring-[color-mix(in_oklab,var(--ring)_50%,transparent)] outline-none transition-all text-xs font-mono leading-relaxed text-base-foreground dark:text-white resize-y mb-1"></textarea>
+            <p class="text-xs text-muted-foreground mb-2">导入将覆盖当前主题，应用后可点「回退上一套」撤销。</p>
+            <p id="theme-import-status" class="hidden text-xs mb-2"></p>
+            <div class="flex gap-2">
+                <button onclick="pickThemeFile()" class="flex-1 px-4 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium border border-line text-base-foreground hover:bg-secondary transition-colors">选择文件</button>
+                <button id="theme-import-apply-btn" onclick="applyThemeJsonFlow()" class="flex-1 px-4 py-2.5 rounded-[var(--radius-xl)] text-sm font-medium text-accent-foreground bg-accent transition-all">应用</button>
+            </div>
+            <input type="file" id="theme-import-file" accept=".json,application/json" class="hidden">
+        </div>
+    </div>
+
+    <div id="loading-mask" class="fixed inset-0 z-30 hidden flex flex-col items-center justify-center transition-opacity">
+        <div class="relative w-16 h-16">
+            <div class="absolute inset-0 w-full h-full rounded-full loading-spinner-track"></div>
+            <div class="absolute inset-0 w-full h-full rounded-full loading-spinner-arc animate-spin"></div>
+        </div>
+        <p class="mt-4 text-accent font-medium animate-pulse tracking-wide">加载中...</p>
+    </div>
+
+    <div id="custom-tooltip" class="fixed hidden pointer-events-none max-w-xs whitespace-pre-wrap border leading-relaxed tracking-wide backdrop-blur-sm rounded-xl shadow-glass px-4 py-2 text-sm transition-opacity duration-150 bg-card text-base-foreground border-[color-mix(in_oklab,var(--border)_50%,transparent)]"></div>
+
+    <script>
+    let isEditMode = false;
+    let isLoggedIn = false;
+    let isGuest = false;
+    let authMode = 'admin';
+    let isAppLayout = localStorage.getItem('appLayout') !== 'false';
+    let editCardMode = false;
+    let isEditCategoryMode = false;
+    const categories = {};
+    let currentEngine;
+    let initialDragState = { category: null, index: -1 };
+    let latencyResults = {};
+    let checkAllRunning = false;
+    let pendingAdminAction = null;
+
+    const DEFAULT_FAVICON = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20128%20128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22grad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20style%3D%22stop-color%3A%2310b981%3Bstop-opacity%3A1%22%20%2F%3E%3Cstop%20offset%3D%22100%25%22%20style%3D%22stop-color%3A%230d9488%3Bstop-opacity%3A1%22%20%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2224%22%20fill%3D%22url%28%23grad%29%22%2F%3E%3Cpath%20d%3D%22M64%2024l12.36%2025.04L104%2054.1l-20%2020.48%204.72%2027.52L64%2088.89%2039.28%20101.1%2044%2073.58%2024%2054.1l27.64-5.06L64%2024z%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E';
+
+    function siteKey(url) {
+        return String(url || '')
+            .replace(/^[a-z]+:\/\//i, '')
+            .replace(/\/+$/, '')
+            .toLowerCase();
+    }
+
+    function findCardsByUrl(rawUrl) {
+        const out = [];
+        document.querySelectorAll('[data-url]').forEach((c) => {
+            if (c.getAttribute('data-url') === rawUrl) out.push(c);
+        });
+        return out;
+    }
+
+    function renderStatus(card, state) {
+        const tag = card.querySelector('.card-status-tag');
+        if (!tag) return;
+        tag.classList.remove('checking', 'online', 'slow', 'offline');
+        if (state === 'checking') {
+            tag.classList.add('checking', 'visible');
+            tag.textContent = '检测中...';
+            tag.title = '';
+        } else if (state && state.online) {
+            const latency = Number(state.latency) || 0;
+            const isLocal = state.source === 'local';
+            if (!isLocal && latency > 1000) { tag.classList.add('offline', 'visible'); }
+            else if (latency > 300) { tag.classList.add('slow', 'visible'); }
+            else { tag.classList.add('online', 'visible'); }
+            tag.textContent = latency + 'ms';
+            tag.title = state.status != null ? ('HTTP ' + state.status + '，耗时 ' + latency + 'ms') : ('在线 ' + latency + 'ms');
+        } else {
+            tag.classList.add('offline', 'visible');
+            tag.textContent = '离线';
+            tag.title = state && state.status != null ? ('HTTP ' + state.status) : '离线或超时';
+        }
+    }
+
+    async function localProbe(url) {
+        const start = Date.now();
+        const TIMEOUT = 3000;
+        return new Promise((resolve) => {
+            let settled = false;
+            let overallTimer = null;
+            let img = null;
+            const controller = new AbortController();
+            const finish = (result) => {
+                if (settled) return;
+                settled = true;
+                if (overallTimer) { clearTimeout(overallTimer); overallTimer = null; }
+                try { controller.abort(); } catch (_) {}
+                if (img) { img.onload = null; img.onerror = null; img.src = ''; img = null; }
+                resolve(Object.assign({ latency: Date.now() - start }, result));
+            };
+            overallTimer = setTimeout(() => finish({ online: false, status: 'error', source: 'local' }), TIMEOUT + 200);
+            fetch(url, { mode: 'no-cors', redirect: 'follow', cache: 'no-store', signal: controller.signal })
+              .then(() => finish({ online: true, status: 200, source: 'local' }))
+              .catch(() => {});
+            try {
+                img = new Image();
+                img.onload = () => finish({ online: true, status: 200, source: 'local' });
+                img.onerror = () => {};
+                const cleanUrl = new URL(url).origin;
+                img.src = cleanUrl + '/favicon.ico?_t=' + Date.now();
+            } catch (e) { img = null; }
+        });
+    }
+
+    async function checkAllSites() {
+        if (!isLoggedIn) { alert('请先登录后再使用检测功能'); return; }
+        if (checkAllRunning) return;
+        if (!await customConfirm('确定要检测全部站点的存活与延迟吗？')) return;
+        checkAllRunning = true;
+        const statusEl = document.getElementById('check-all-status');
+        if (statusEl) statusEl.textContent = '检测中...';
+        const links = getAllLinks().filter((l) => l && l.url);
+        const total = links.length;
+        if (total === 0) { checkAllRunning = false; if (statusEl) statusEl.textContent = '0 个站点'; return; }
+        const allCards = document.querySelectorAll('[data-url]');
+        allCards.forEach((c) => renderStatus(c, 'checking'));
+        links.forEach((l) => { latencyResults[siteKey(l.url)] = 'checking'; });
+        const queue = links.slice();
+        let doneCount = 0;
+        let lastProgressUpdate = 0;
+        function updateProgress() {
+            if (!statusEl) return;
+            const now = Date.now();
+            if (now - lastProgressUpdate > 100 || doneCount === total) {
+                statusEl.textContent = doneCount + '/' + total;
+                lastProgressUpdate = now;
+            }
+        }
+        async function worker() {
+            while (queue.length > 0) {
+                const link = queue.shift();
+                if (!link) continue;
+                const key = siteKey(link.url);
+                const cards = findCardsByUrl(link.url);
+                const result = await localProbe(link.url);
+                latencyResults[key] = result;
+                if (cards.length > 0) cards.forEach((c) => renderStatus(c, result));
+                doneCount++;
+                updateProgress();
+            }
+        }
+        const tasks = [];
+        const concurrency = Math.min(5, queue.length);
+        for (let i = 0; i < concurrency; i++) tasks.push(worker());
+        await Promise.all(tasks);
+        checkAllRunning = false;
+        if (statusEl) statusEl.textContent = '';
+    }
+
+    function toggleAppLayout() {
+        isAppLayout = !isAppLayout;
+        localStorage.setItem('appLayout', isAppLayout);
+        const checkbox = document.getElementById('layout-switch-checkbox');
+        if (checkbox) checkbox.checked = isAppLayout;
+        loadSections();
+    }
+
+    function logAction(action, details) {
+        console.log(`${new Date().toISOString()}: ${action} - `, details);
+    }
+
+    const searchEngines = { baidu: "https://www.baidu.com/s?wd=", bing: "https://www.bing.com/search?q=", google: "https://www.google.com/search?q=", site: "" };
+    const searchEngineLabels = { baidu: "百度", bing: "必应", google: "谷歌", site: "本站" };
+    const searchEngineIcons = {
+        site:   '<svg width="16" height="16" fill="#FFD700" stroke="#FFD700" viewBox="0 0 24 24"><path fill="#FFD700" stroke="#FFD700" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>',
+        baidu:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="#2932E1"><ellipse cx="12" cy="16.6" rx="5.8" ry="5"/><ellipse cx="4.9" cy="9" rx="2.4" ry="3.4" transform="rotate(-18 4.9 9)"/><ellipse cx="9.8" cy="5.7" rx="2.2" ry="3.3"/><ellipse cx="14.6" cy="5.7" rx="2.2" ry="3.3"/><ellipse cx="19.5" cy="9" rx="2.4" ry="3.4" transform="rotate(18 19.5 9)"/></svg>',
+        bing:   '<svg width="16" height="16" viewBox="0 0 32 32"><path fill="#008373" d="m4.807 0l6.391 2.25v22.495l9.005-5.193l-4.411-2.073l-2.786-6.932l14.188 4.984v7.245L11.204 32l-6.396-3.563z"/></svg>',
+        google: '<svg width="16" height="16" viewBox="0 0 256 262"><path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"/><path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"/><path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"/><path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"/></svg>'
+    };
+    const engineList = ['google', 'site', 'baidu', 'bing'];
+
+    function renderSearchEngineMenu() {
+        const container = document.getElementById('search-engine-list');
+        const title = container.querySelector('div');
+        container.innerHTML = '';
+        container.appendChild(title);
+        engineList.forEach(key => {
+            const label = searchEngineLabels[key];
+            const icon = searchEngineIcons[key];
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left px-3 py-2.5 text-sm text-base-foreground hover:bg-soft hover:text-accent transition-colors flex items-center gap-3";
+            btn.onclick = () => selectSearchEngine(key, label);
+            btn.innerHTML = `${icon}<span>${label}</span>`;
+            container.appendChild(btn);
+        });
+    }
+
+    function setActiveEngine(engine) {
+        if (!searchEngines.hasOwnProperty(engine) && engine !== 'site') engine = 'google';
+        selectSearchEngine(engine, searchEngineLabels[engine]);
+    }
+
+    function updateSearchEngineUI(value) {
+        const label = searchEngineLabels[value] || "谷歌";
+        const icon = searchEngineIcons[value] || searchEngineIcons['google'];
+        document.getElementById('current-engine-label').textContent = label;
+        document.getElementById('current-engine-icon').innerHTML = icon;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const loadingMask = document.getElementById('loading-mask');
+        if (loadingMask) loadingMask.classList.remove('hidden');
+        initializeUIComponents();
+        renderSearchEngineMenu();
+        await checkLoginStatusAndLoad();
+        if (loadingMask) loadingMask.classList.add('hidden');
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible' && isLoggedIn) {
+                await validateToken();
+                pullThemeFromKv();
+            }
+        });
+    });
+
+    async function checkLoginStatusAndLoad() {
+        const isValid = await validateToken();
+        if (isValid) {
+            isLoggedIn = true;
+            isGuest = false;
+            localStorage.removeItem('guestToken');
+        } else {
+            isLoggedIn = false;
+            isEditMode = false;
+            isGuest = await validateGuestTokenClient();
+        }
+        await loadLinks(true);
+        try { await pullThemeFromKv(); } catch (e) { }
+        try { await loadSiteIcon(); } catch (e) { }
+    }
+
+    async function validateGuestTokenClient() {
+        const t = localStorage.getItem('guestToken');
+        if (!t) return false;
+        try {
+            const r = await fetch('/api/validateGuest', { headers: { Authorization: t } });
+            if (r.status === 200) return true;
+            localStorage.removeItem('guestToken');
+            return false;
+        } catch (e) { return false; }
+    }
+
+    function initializeUIComponents() {
+        const elements = {
+            themeSwitchCheckbox: document.getElementById('theme-switch-checkbox'),
+            layoutSwitchCheckbox: document.getElementById('layout-switch-checkbox'),
+            savePrefCheckbox: document.getElementById('save-preference-checkbox'),
+            searchButton: document.getElementById('search-button'),
+            searchInput: document.getElementById('search-input'),
+            clearSearchButton: document.getElementById('clear-search-button'),
+            menuToggleBtn: document.getElementById('profile-menu-toggle'),
+            dropdown: document.getElementById('profile-dropdown'),
+            dropdownWrapper: document.getElementById('profile-dropdown-wrapper'),
+            backToTopBtn: document.getElementById('back-to-top-btn')
+        };
+        elements.themeSwitchCheckbox.checked = document.documentElement.classList.contains('dark');
+        elements.themeSwitchCheckbox.addEventListener('change', (e) => {
+            const isDark = e.target.checked;
+            window.isDarkTheme = isDark;
+            applyTheme(isDark);
+            const savePrefCheckbox = document.getElementById('save-preference-checkbox');
+            if (savePrefCheckbox && savePrefCheckbox.checked) localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        if (elements.layoutSwitchCheckbox) elements.layoutSwitchCheckbox.checked = isAppLayout;
+        const savedPref = localStorage.getItem('savePreferences') === 'true';
+        elements.savePrefCheckbox.checked = savedPref;
+        if (window.matchMedia) {
+            const darkMedia = window.matchMedia('(prefers-color-scheme: dark)');
+            const onSystemDarkChange = (e) => {
+                if (localStorage.getItem('savePreferences') === 'true') return;
+                window.isDarkTheme = e.matches;
+                applyTheme(e.matches);
+            };
+            if (darkMedia.addEventListener) darkMedia.addEventListener('change', onSystemDarkChange);
+            else if (darkMedia.addListener) darkMedia.addListener(onSystemDarkChange);
+        }
+        currentEngine = (savedPref && localStorage.getItem('searchEngine')) || 'google';
+        updateSearchEngineUI(currentEngine);
+        const searchWrapper = document.getElementById('search-engine-wrapper');
+        const searchBtn = document.getElementById('search-engine-btn');
+        const searchMenu = document.getElementById('search-engine-menu');
+        searchBtn.addEventListener('click', (e) => { e.stopPropagation(); searchMenu.classList.toggle('hidden'); });
+        const catWrapper = document.getElementById('category-select-wrapper');
+        const catBtn = document.getElementById('category-select-btn');
+        const catMenu = document.getElementById('category-select-menu');
+        catBtn.addEventListener('click', (e) => { e.stopPropagation(); catMenu.classList.toggle('hidden'); });
+        const toggleDropdown = () => { elements.dropdown.classList.toggle('hidden'); };
+        elements.menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(); });
+        document.addEventListener('click', (e) => {
+            if (!elements.dropdownWrapper.contains(e.target)) elements.dropdown.classList.add('hidden');
+            if (!searchWrapper.contains(e.target)) searchMenu.classList.add('hidden');
+            if (!catWrapper.contains(e.target)) catMenu.classList.add('hidden');
+        });
+        elements.dropdown.addEventListener('click', (e) => { e.stopPropagation(); });
+        elements.savePrefCheckbox.addEventListener('change', () => {
+            const enabled = elements.savePrefCheckbox.checked;
+            localStorage.setItem('savePreferences', enabled);
+            if (!enabled) { localStorage.removeItem('searchEngine'); localStorage.removeItem('theme'); }
+            else { localStorage.setItem('searchEngine', currentEngine); localStorage.setItem('theme', window.isDarkTheme ? 'dark' : 'light'); }
+        });
+        elements.searchButton.addEventListener('click', async () => {
+            const query = elements.searchInput.value.trim();
+            if (query) {
+                if (currentEngine === 'site') await searchLinks(query);
+                else window.open(searchEngines[currentEngine] + encodeURIComponent(query), '_blank');
+            }
+        });
+        if (elements.clearSearchButton) {
+            elements.clearSearchButton.addEventListener('click', () => { elements.searchInput.value = ''; loadSections(); });
+        }
+        if (elements.searchInput) {
+            elements.searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') elements.searchButton.click(); });
+            let searchDebounceTimer = null;
+            elements.searchInput.addEventListener('input', (e) => {
+                if (e.target.value) elements.clearSearchButton.classList.remove('hidden');
+                else elements.clearSearchButton.classList.add('hidden');
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(() => {
+                    const q = e.target.value.trim();
+                    if (!q) { renderCategorySections({ renderButtons: true }); return; }
+                    if (currentEngine === 'site') {
+                        elements.clearSearchButton.classList.remove('hidden');
+                        const filtered = getFilteredCategoriesByKeyword(q);
+                        renderCategorySections({ renderButtons: true, searchMode: true, filteredCategories: filtered });
+                    }
+                }, 220);
+            });
+        }
+        window.addEventListener('scroll', () => { elements.backToTopBtn.classList.toggle('hidden', window.scrollY <= 300); }, { passive: true });
+        setupTooltipDelegation();
+        const yearEl = document.getElementById('footer-year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+        const iconCancelBtn = document.getElementById('site-icon-settings-cancel-btn');
+        if (iconCancelBtn) iconCancelBtn.onclick = () => toggleOverlay('site-icon-settings-overlay', false);
+        const iconSaveBtn = document.getElementById('site-icon-settings-save-btn');
+        if (iconSaveBtn) iconSaveBtn.onclick = saveSiteIcon;
+    }
+
+    function selectSearchEngine(value, label) {
+        currentEngine = value;
+        updateSearchEngineUI(value);
+        const savePrefCheckbox = document.getElementById('save-preference-checkbox');
+        if (savePrefCheckbox && savePrefCheckbox.checked) localStorage.setItem('searchEngine', value);
+        document.getElementById('search-engine-menu').classList.add('hidden');
+    }
+
+    async function requireAdminAuth(callback) {
+        const dd = document.getElementById('profile-dropdown');
+        if (dd) dd.classList.add('hidden');
+        if (isLoggedIn) {
+            const valid = await validateToken();
+            if (valid) { callback(); return; }
+            isLoggedIn = false;
+            isEditMode = false;
+            updateUIState();
+        }
+        authMode = 'admin';
+        pendingAdminAction = callback;
+        document.getElementById('password-input').value = '';
+        const hint = document.getElementById('password-dialog-hint');
+        if (hint) hint.textContent = '请输入管理员密码以继续操作';
+        toggleOverlay('password-dialog-overlay', true);
+        setTimeout(() => { try { document.getElementById('password-input').focus(); } catch (e) { } }, 100);
+    }
+
+    let siteIconUrl = '';
+
+    async function loadSiteIcon() {
+        try {
+            const res = await fetchWithAuth('/api/getSiteIcon');
+            if (res.ok) {
+                const data = await res.json();
+                if (data && typeof data.icon === 'string') siteIconUrl = data.icon;
+            }
+        } catch (e) { }
+        applySiteIcon(siteIconUrl);
+    }
+
+    function applySiteIcon(url) {
+        const hasCustom = url && url.trim() !== '';
+        const safe = hasCustom ? escAttr(url) : '';
+        const headerIcon = document.getElementById('site-logo-icon');
+        if (headerIcon) {
+            if (hasCustom) headerIcon.innerHTML = '<img src="' + safe + '" class="w-full h-full object-contain" alt="logo" style="padding:2px;">';
+            else headerIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>';
+        }
+        const footerIcon = document.getElementById('footer-logo-icon');
+        if (footerIcon) {
+            if (hasCustom) footerIcon.innerHTML = '<img src="' + safe + '" class="w-full h-full object-contain" alt="logo" style="padding:2px;">';
+            else footerIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>';
+        }
+        const favicon = document.getElementById('site-favicon');
+        if (favicon) favicon.href = hasCustom ? url : DEFAULT_FAVICON;
+    }
+
+    function openSiteIconSettings() {
+        if (!isLoggedIn) { toggleLogin(); return; }
+        requireAdminAuth(() => {
+            document.getElementById('site-icon-url-input').value = siteIconUrl || '';
+            toggleOverlay('site-icon-settings-overlay', true);
+        });
+    }
+
+    async function saveSiteIcon() {
+        const url = document.getElementById('site-icon-url-input').value.trim();
+        try {
+            const res = await fetchWithAuth('/api/saveSiteIcon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ icon: url })
+            });
+            if (!res.ok) throw new Error('保存失败');
+            siteIconUrl = url;
+            applySiteIcon(siteIconUrl);
+            toggleOverlay('site-icon-settings-overlay', false);
+            await customAlert('图标设置已保存，全站生效');
+        } catch (e) {
+            await customAlert('保存图标设置失败，请重试');
+        }
+    }
+
+    function updateFooterStats() {
+        const siteEl = document.getElementById('footer-site-count');
+        const catEl = document.getElementById('footer-category-count');
+        if (!siteEl || !catEl) return;
+        let totalLinks = 0;
+        let totalCats = 0;
+        Object.keys(categories).forEach(name => {
+            const cat = categories[name];
+            if (!cat) return;
+            if (cat.isHidden && !isLoggedIn && !isEditMode && !isGuest) return;
+            const links = (cat.links || []).filter(l => !l.isPrivate || isLoggedIn);
+            if (links.length === 0) return;
+            totalCats++;
+            totalLinks += links.length;
+        });
+        siteEl.textContent = totalLinks;
+        catEl.textContent = totalCats;
+    }
+
+    function getAllLinks() { return Object.values(categories).map(category => category.links || []).flat(); }
+
+    async function loadLinks(alreadyValidated = false) {
+        if (isLoggedIn && !alreadyValidated) {
+            const isValid = await validateToken();
+            if (!isValid) { logout(); return; }
+        }
+        try {
+            const response = await fetchWithAuth('/api/getLinks');
+            if (!response.ok) throw new Error("HTTP error! status: " + response.status);
+            const data = await response.json();
+            if (data.categories) {
+                Object.keys(categories).forEach(key => delete categories[key]);
+                Object.assign(categories, data.categories);
+            }
+            loadSections();
+            updateCategorySelect();
+            updateUIState();
+            updateFooterStats();
+        } catch (error) {
+            console.error('Error loading links:', error);
+            await customAlert('加载链接时出错，请刷新页面重试');
+        }
+    }
+
+    async function saveDataToServer(actionName, data) {
+        try {
+            const response = await fetchWithAuth('/api/saveData', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ categories: data })
+            });
+            if (response.status === 401) {
+                logout();
+                await customAlert('登录凭证已过期，请重新登录');
+                throw new Error('Unauthorized');
+            }
+            const result = await response.json();
+            if (!result.success) throw new Error('Failed to save');
+            logAction(actionName + '成功', {});
+        } catch (error) {
+            logAction(actionName + '失败', { error: error.message });
+            if (error.message !== 'Unauthorized') await customAlert(actionName + '失败，请重试');
+        }
+    }
+
+    async function saveLinks() { if (isEditMode) await saveDataToServer('保存数据', categories); }
+
+    async function addCategory() {
+        if (!await validateTokenOrRedirect()) return;
+        const categoryName = await showCategoryDialog('请输入新分类名称');
+        if (!categoryName) return;
+        if (categories[categoryName]) { await customAlert('该分类已存在'); return; }
+        categories[categoryName] = { isHidden: false, links: [] };
+        updateCategorySelect();
+        renderCategories();
+        setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 100);
+        await saveLinks();
+        updateFooterStats();
+    }
+
+    async function editCategoryName(oldName) {
+        if (!await validateTokenOrRedirect()) return;
+        const newName = await showCategoryDialog('请输入新的分类名称', oldName);
+        if (!newName || newName === oldName) return;
+        if (categories[newName]) { await customAlert('该名称已存在'); return; }
+        const keys = Object.keys(categories);
+        const newCategories = {};
+        keys.forEach(key => {
+            if (key === oldName) {
+                const data = categories[oldName];
+                data.links.forEach(item => item.category = newName);
+                newCategories[newName] = data;
+            } else { newCategories[key] = categories[key]; }
+        });
+        Object.keys(categories).forEach(k => delete categories[k]);
+        Object.assign(categories, newCategories);
+        renderCategories();
+        updateCategorySelect();
+        await saveLinks();
+    }
+
+    async function deleteCategory(category) {
+        if (!await validateTokenOrRedirect()) return;
+        if (await customConfirm(`确定删除 "${category}" 分类及其所有链接吗？`)) {
+            delete categories[category];
+            updateCategorySelect();
+            renderCategories();
+            await saveLinks();
+            updateFooterStats();
+        }
+    }
+
+    async function moveCategory(categoryName, direction) {
+        if (!await validateTokenOrRedirect()) return;
+        const keys = Object.keys(categories);
+        const index = keys.indexOf(categoryName);
+        if (index < 0) return;
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= keys.length) return;
+        const newCategories = {};
+        const reordered = [...keys];
+        [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
+        reordered.forEach(key => newCategories[key] = categories[key]);
+        Object.keys(categories).forEach(k => delete categories[k]);
+        Object.assign(categories, newCategories);
+        renderCategories();
+        await saveLinks();
+    }
+
+    async function toggleCategoryHidden(category, isHidden) {
+        if (!await validateTokenOrRedirect()) return;
+        categories[category].isHidden = isHidden;
+        await saveLinks();
+        updateFooterStats();
+    }
+
+    async function pinCategory(categoryName) {
+        if (!await validateTokenOrRedirect()) return;
+        const keys = Object.keys(categories);
+        const index = keys.indexOf(categoryName);
+        if (index < 0) return;
+        const newCategories = {};
+        const reordered = [...keys];
+        reordered.splice(index, 1);
+        reordered.unshift(categoryName);
+        reordered.forEach(key => newCategories[key] = categories[key]);
+        Object.keys(categories).forEach(k => delete categories[k]);
+        Object.assign(categories, newCategories);
+        renderCategories();
+        await saveLinks();
+    }
+
+    function getFilteredCategoriesByKeyword(query) {
+        const lowerQuery = query.toLowerCase();
+        const result = {};
+        Object.keys(categories).forEach(category => {
+            const categoryData = categories[category];
+            const matchedLinks = (categoryData.links || []).filter(link => {
+                const nameMatch = link.name && link.name.toLowerCase().includes(lowerQuery);
+                const tipsMatch = link.tips && link.tips.toLowerCase().includes(lowerQuery);
+                const urlMatch = link.url && link.url.toLowerCase().includes(lowerQuery);
+                return nameMatch || tipsMatch || urlMatch;
+            });
+            if (matchedLinks.length > 0) result[category] = { ...categoryData, links: matchedLinks };
+        });
+        return result;
+    }
+
+    function renderCategorySections({ renderButtons = false, searchMode = false, filteredCategories = null } = {}) {
+        const container = document.getElementById('sections-container');
+        setupCardDelegation(container);
+        const fragment = document.createDocumentFragment();
+        const sourceCategories = searchMode && filteredCategories ? filteredCategories : categories;
+        Object.entries(sourceCategories).forEach(([category, { links, isHidden }]) => {
+            if (!isEditMode && !isLoggedIn && !isGuest && isHidden && !searchMode) return;
+            const section = document.createElement('div');
+            section.className = 'section section-anchor';
+            section.id = sectionId(category);
+            section.dataset.category = category;
+            const titleContainer = document.createElement('div');
+            titleContainer.className = 'flex items-center gap-3 mb-5 pb-2 border-b border-[color-mix(in_oklab,var(--muted),var(--border))]';
+            const title = document.createElement('h2');
+            title.className = 'text-lg font-bold text-base-foreground flex items-center gap-2';
+            const badge = document.createElement('span');
+            badge.className = 'w-1.5 h-5 bg-accent rounded-full inline-block shadow-sm';
+            title.append(badge, ' ' + category);
+            titleContainer.appendChild(title);
+            if (isEditMode) {
+                const controls = document.createElement('div');
+                controls.className = 'flex items-center gap-1 ml-auto bg-[color-mix(in_oklab,var(--muted)_70%,transparent)] p-1 rounded-xl border border-[color-mix(in_oklab,var(--border)_60%,transparent)] backdrop-blur-sm';
+                const btnBase = "w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 hover:scale-105 active:scale-95";
+                controls.innerHTML = `
+                    <button class="${btnBase} text-muted-foreground hover:text-blue-600 hover:bg-blue-100 has-tooltip" data-tooltip="重命名" data-action="edit" data-category="${escAttr(category)}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                    <div class="w-px h-4 bg-line mx-0.5"></div>
+                    <button class="${btnBase} text-muted-foreground hover:text-accent hover:bg-soft has-tooltip" data-tooltip="上移" data-action="move" data-dir="-1" data-category="${escAttr(category)}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </button>
+                    <button class="${btnBase} text-muted-foreground hover:text-accent hover:bg-soft has-tooltip" data-tooltip="下移" data-action="move" data-dir="1" data-category="${escAttr(category)}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <button class="${btnBase} text-muted-foreground hover:text-amber-600 hover:bg-amber-100 has-tooltip" data-tooltip="置顶" data-action="pin" data-category="${escAttr(category)}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h14M18 13l-6-6l-6 6M12 7v14"></path></svg>
+                    </button>
+                    <div class="w-px h-4 bg-line mx-0.5"></div>
+                    <div class="flex items-center justify-center w-8 h-8 has-tooltip cursor-pointer" data-tooltip="${isHidden ? '显示分类' : '隐藏分类'}">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" data-action="toggleHidden" data-category="${escAttr(category)}" ${isHidden ? 'checked' : ''} class="sr-only peer">
+                            <div class="w-3.5 h-3.5 rounded-full border-2 border-line peer-checked:bg-accent peer-checked:border-accent transition-colors"></div>
+                        </label>
+                    </div>
+                    <div class="w-px h-4 bg-line mx-0.5"></div>
+                    <button class="${btnBase} text-muted-foreground hover:text-red-600 hover:bg-red-100 has-tooltip" data-tooltip="删除分类" data-action="delete" data-category="${escAttr(category)}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                `;
+                titleContainer.appendChild(controls);
+            }
+            const cardContainer = document.createElement('div');
+            const gridClasses = isAppLayout
+                ? 'grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-x-2 gap-y-6'
+                : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4';
+            cardContainer.className = `grid ${gridClasses} card-container relative`;
+            cardContainer.id = gridId(category);
+            const cardsFragment = document.createDocumentFragment();
+            links.forEach(link => {
+                const card = createCard(link);
+                if (card) cardsFragment.appendChild(card);
+            });
+            cardContainer.appendChild(cardsFragment);
+            section.appendChild(titleContainer);
+            section.appendChild(cardContainer);
+            fragment.appendChild(section);
+            if (isEditMode) {
+                const addCardPlaceholder = document.createElement('div');
+                const sizeClasses = isAppLayout ? 'w-16 h-16 rounded-[1.2rem] mx-auto' : 'min-h-[100px] p-4 rounded-[var(--radius-2xl)] w-full';
+                addCardPlaceholder.className = `add-card-placeholder group flex flex-col h-full w-full ${sizeClasses} rounded-[var(--radius-2xl)] border-2 border-dashed border-line hover:border-accent hover:bg-[color-mix(in_oklab,var(--accent)_50%,transparent)] transition-all cursor-pointer flex items-center justify-center`;
+                addCardPlaceholder.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-muted group-hover:bg-soft flex items-center justify-center transition-colors pointer-events-none">
+                        <svg class="w-6 h-6 text-muted-foreground group-hover:text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </div>
+                `;
+                addCardPlaceholder.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (draggedCard && draggedCard.parentElement === cardContainer) cardContainer.insertBefore(draggedCard, addCardPlaceholder);
+                });
+                addCardPlaceholder.onclick = () => {
+                    showAddDialog();
+                    document.getElementById('category-select-value').value = category;
+                    document.getElementById('category-select-text').textContent = category;
+                };
+                cardContainer.appendChild(addCardPlaceholder);
+            }
+        });
+        container.replaceChildren(fragment);
+        if (renderButtons) renderCategoryButtons();
+        setupScrollSpy();
+    }
+
+    function renderCategories() { renderCategorySections({ renderButtons: false }); }
+
+    async function searchLinks(query) {
+        const clearBtn = document.getElementById('clear-search-button');
+        const filteredData = getFilteredCategoriesByKeyword(query);
+        const hasMatchingLinks = Object.values(filteredData).some(c => c.links.length > 0);
+        if (!hasMatchingLinks) { await customAlert('没有找到相关站点。'); return; }
+        clearBtn.classList.remove('hidden');
+        renderCategorySections({ renderButtons: true, searchMode: true, filteredCategories: filteredData });
+    }
+
+    function renderCategoryButtons() { }
+    function setupScrollSpy() { }
+    function highlightButton(id) { }
+
+    let overlayScrollCount = 0;
+    function lockPageScroll() {
+        const locked = overlayScrollCount > 0;
+        overlayScrollCount++;
+        if (!locked) document.body.style.overflow = 'hidden';
+    }
+    function unlockPageScroll() {
+        overlayScrollCount = Math.max(0, overlayScrollCount - 1);
+        if (overlayScrollCount === 0) document.body.style.overflow = '';
+    }
+
+    function toggleOverlay(id, show) {
+        const overlay = document.getElementById(id);
+        const box = overlay.querySelector('div[id$="-box"]');
+        if (show) {
+            overlay.classList.remove('hidden');
+            void overlay.offsetWidth;
+            overlay.classList.remove('overlay-hidden');
+            overlay.classList.add('overlay-visible');
+            if (box) { box.classList.remove('dialog-scale-hidden'); box.classList.add('dialog-scale-visible'); }
+            lockPageScroll();
+        } else {
+            overlay.classList.remove('overlay-visible');
+            overlay.classList.add('overlay-hidden');
+            if (box) { box.classList.remove('dialog-scale-visible'); box.classList.add('dialog-scale-hidden'); }
+            unlockPageScroll();
+            setTimeout(() => { if (overlay.classList.contains('overlay-hidden')) overlay.classList.add('hidden'); }, 300);
+        }
+    }
+
+    function updateUIState() {
+        const editModeBtn = document.getElementById('edit-mode-btn');
+        const loginBtn = document.getElementById('login-Btn');
+        const guestBtn = document.getElementById('guest-login-Btn');
+        const addCategoryContainer = document.getElementById('add-category-container');
+        const dataToolsMenu = document.getElementById('data-tools-menu');
+        const checkAllMenu = document.getElementById('check-all-menu');
+        const siteIconMenu = document.getElementById('site-icon-settings-menu');
+        loginBtn.innerHTML = isLoggedIn
+            ? '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> 退出登录'
+            : '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> 登录';
+        if (isLoggedIn) {
+            loginBtn.classList.replace('text-red-500', 'text-base-foreground');
+            if (dataToolsMenu) dataToolsMenu.classList.remove('hidden');
+            if (checkAllMenu) checkAllMenu.classList.remove('hidden');
+            if (siteIconMenu) siteIconMenu.classList.remove('hidden');
+        } else {
+            if (dataToolsMenu) dataToolsMenu.classList.add('hidden');
+            if (checkAllMenu) checkAllMenu.classList.add('hidden');
+            if (siteIconMenu) siteIconMenu.classList.add('hidden');
+        }
+        const guestIcon = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>';
+        if (guestBtn) guestBtn.innerHTML = guestIcon + (isGuest ? '退出访客' : '访客登录');
+        if (isEditMode) {
+            editModeBtn.innerHTML = '<span class="text-red-500 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>退出编辑</span>';
+            document.body.classList.add('edit-mode');
+            if (addCategoryContainer) addCategoryContainer.classList.remove('hidden');
+        } else {
+            editModeBtn.innerHTML = isLoggedIn
+                ? '<span class="flex items-center gap-3"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>进入编辑模式</span>'
+                : '<span class="flex items-center gap-3 text-muted-foreground"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>编辑模式 (需登录)</span>';
+            document.body.classList.remove('edit-mode');
+            if (addCategoryContainer) addCategoryContainer.classList.add('hidden');
+        }
+    }
+
+    function loadSections() {
+        document.getElementById('clear-search-button').classList.add('hidden');
+        document.getElementById('search-input').value = '';
+        renderCategorySections({ renderButtons: true });
+    }
+
+    const imgApi = '/api/icon?url=';
+    const iconCache = new Map();
+    const iconFailed = new Set();
+
+    function createIconFallback(refEl) {
+        const box = document.createElement('div');
+        box.className = refEl.className.replace('opacity-0', 'opacity-100').replace('object-contain', '') + ' text-black dark:text-muted-foreground';
+        box.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" style="display:block;width:100%;height:100%"><path fill="currentColor" d="M62 32C62 15.432 48.568 2 32 2C15.861 2 2.703 14.746 2.031 30.72c-.008.196-.01.395-.014.592c-.005.23-.017.458-.017.688v.101C2 48.614 15.432 62 32 62s30-13.386 30-29.899l-.002-.049z"/></svg>';
+        return box;
+    }
+
+    function escAttr(v) {
+        return String(v).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    function slugId(v) {
+        const s = String(v).trim().replace(/[^A-Za-z0-9一-龥_-]+/g, '-').replace(/^-+|-+$/g, '');
+        return (s || 'cat') + '-' + Math.abs([...String(v)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0));
+    }
+    function gridId(category) { return 'grid-' + slugId(category); }
+    function sectionId(category) { return 'sec-' + slugId(category); }
+
+    function safeUrl(raw) {
+        try {
+            const u = new URL(String(raw), location.href);
+            if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+            return u.toString();
+        } catch (e) { return null; }
+    }
+
+    function createCard(link) {
+        if (!isEditMode && link.isPrivate && !isLoggedIn) return null;
+        const card = document.createElement('div');
+        let cardBaseClass = isAppLayout
+            ? 'flex flex-col items-center justify-start py-1 gap-1.5 hover:z-10'
+            : 'flex flex-col p-4 bg-[color-mix(in_oklab,var(--card)_90%,transparent)] backdrop-blur-sm border border-line hover:border-[color-mix(in_oklab,var(--primary)_50%,transparent)] shadow-sm hover:shadow-[0_8px_20px_-6px_rgba(0,0,0,0.1)] hover:-translate-y-1.5';
+        if (link.isPrivate && !isAppLayout) {
+            cardBaseClass += ' ring-1 ring-amber-400/40 bg-[color-mix(in_oklab,var(--card)_85%,transparent)] !border-amber-200';
+        }
+        card.className = `group relative h-full w-full rounded-[var(--radius-2xl)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] cursor-pointer select-none ${cardBaseClass}`;
+        if (isEditMode) {
+            card.setAttribute('draggable', 'true');
+            card.classList.add('card');
+            card.classList.add('cursor-move');
+        }
+        card.dataset.isPrivate = link.isPrivate;
+        card.setAttribute('data-url', link.url);
+        const header = document.createElement('div');
+        header.className = isAppLayout ? 'flex flex-col items-center justify-center w-full relative' : 'flex items-center gap-3 mb-2.5 w-full';
+        const iconWrap = document.createElement('div');
+        const iconWrapClass = isAppLayout ? 'relative w-14 h-14 sm:w-16 sm:h-16' : 'relative w-9 h-9';
+        iconWrap.className = iconWrapClass;
+        const spinner = document.createElement('span');
+        spinner.className = 'absolute inset-0 flex items-center justify-center pointer-events-none';
+        spinner.innerHTML = '<span class="block icon-spinner rounded-full animate-spin" style="width:60%;height:60%;aspect-ratio:1/1;"></span>';
+        const icon = document.createElement('img');
+        icon.setAttribute('loading', 'lazy');
+        icon.setAttribute('decoding', 'async');
+        icon.setAttribute('width', isAppLayout ? 64 : 36);
+        icon.setAttribute('height', isAppLayout ? 64 : 36);
+        let iconClass = 'relative w-full h-full opacity-0 transition duration-300';
+        if (isAppLayout) {
+            iconClass += ' rounded-[1.2rem] object-contain bg-muted p-2 shadow-md hover:shadow-lg group-hover:scale-105 group-active:scale-95 z-10';
+            if (link.isPrivate) iconClass += ' ring-2 ring-amber-400';
+        } else {
+            iconClass += ' rounded-lg object-contain bg-muted p-1 border border-line transition-transform group-hover:scale-105 pointer-events-none';
+        }
+        icon.className = iconClass;
+        let resolvedSrc;
+        if (link.icon && link.icon.startsWith('http')) { resolvedSrc = link.icon; }
+        else if (iconCache.has(link.url)) { resolvedSrc = iconCache.get(link.url); }
+        else { resolvedSrc = imgApi + encodeURIComponent(link.url); iconCache.set(link.url, resolvedSrc); }
+        let iconNode = icon;
+        if (iconFailed.has(resolvedSrc)) { iconNode = createIconFallback(icon); }
+        else {
+            icon.src = resolvedSrc;
+            icon.onload = function() { this.classList.add('opacity-100'); this.classList.remove('opacity-0'); spinner.remove(); };
+            icon.onerror = function() { iconFailed.add(resolvedSrc); this.onerror = null; this.replaceWith(createIconFallback(this)); spinner.remove(); };
+        }
+        if (iconNode === icon) iconWrap.appendChild(spinner);
+        iconWrap.appendChild(iconNode);
+        const title = document.createElement('div');
+        const titleAlign = isAppLayout
+            ? 'text-center text-xs sm:text-sm font-medium mt-1 w-[120%] truncate px-1 text-base-foreground drop-shadow-sm'
+            : 'font-semibold text-sm flex-1 truncate text-base-foreground group-hover:text-accent transition-colors pointer-events-none';
+        title.className = `card-title pointer-events-none ${titleAlign}`;
+        title.textContent = link.name;
+        header.appendChild(iconWrap);
+        header.appendChild(title);
+        const statusTag = document.createElement('span');
+        statusTag.className = 'card-status-tag';
+        statusTag.setAttribute('data-for', link.url);
+        statusTag.textContent = '';
+        header.appendChild(statusTag);
+        card.appendChild(header);
+        if (!isAppLayout) {
+            const desc = document.createElement('div');
+            desc.className = 'text-xs text-muted-foreground line-clamp-2 min-h-[1.25rem] card-tip leading-relaxed pointer-events-none w-full';
+            desc.textContent = link.tips || '';
+            card.appendChild(desc);
+        }
+        if (link.isPrivate && !isAppLayout) {
+            const badge = document.createElement('div');
+            badge.className = 'absolute top-0 right-0 w-8 h-8 pointer-events-none overflow-hidden rounded-tr-[var(--radius-2xl)]';
+            badge.innerHTML = '<div class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 rotate-45 w-8 h-8 bg-amber-400"></div>';
+            card.appendChild(badge);
+        }
+        const prevResult = latencyResults[siteKey(link.url)];
+        if (prevResult === 'checking') renderStatus(card, 'checking');
+        else if (prevResult) renderStatus(card, prevResult);
+        if (isEditMode) {
+            const actionWrapper = document.createElement('div');
+            actionWrapper.className = isAppLayout ? 'absolute top-[-4px] right-[-4px] z-30' : 'absolute top-2 right-2 z-30';
+            const menuBtn = document.createElement('button');
+            const btnStyle = isAppLayout
+                ? 'w-6 h-6 rounded-full bg-secondary text-muted-foreground shadow-sm hover:bg-accent hover:text-accent-foreground'
+                : 'w-7 h-7 rounded-lg text-muted-foreground hover:bg-[color-mix(in_oklab,var(--muted)_80%,transparent)] backdrop-blur-sm';
+            menuBtn.className = `${btnStyle} flex items-center justify-center transition-all duration-200`;
+            menuBtn.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>';
+            const dropdown = document.createElement('div');
+            dropdown.className = 'hidden absolute right-0 top-6 w-28 bg-card rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden transform origin-top-right transition-all z-50 flex flex-col p-1 card-menu-dropdown';
+            dropdown.innerHTML = `
+                <button class="menu-edit w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-base-foreground hover:bg-soft hover:text-accent transition-colors flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    编辑
+                </button>
+                <button class="menu-delete w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-base-foreground hover:bg-red-50 hover:text-red-500 transition-colors flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    删除
+                </button>
+            `;
+            menuBtn.onclick = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.card-menu-dropdown').forEach(el => { if (el !== dropdown) el.classList.add('hidden'); });
+                dropdown.classList.toggle('hidden');
+            };
+            dropdown.querySelector('.menu-edit').onclick = (e) => { e.stopPropagation(); dropdown.classList.add('hidden'); showEditDialog(link); };
+            dropdown.querySelector('.menu-delete').onclick = (e) => { e.stopPropagation(); dropdown.classList.add('hidden'); removeCard(card); };
+            actionWrapper.appendChild(menuBtn);
+            actionWrapper.appendChild(dropdown);
+            card.appendChild(actionWrapper);
+        }
+        if (!isEditMode) {
+            card.onclick = () => { const target = safeUrl(link.url); if (target) window.open(target, '_blank', 'noopener,noreferrer'); };
+        }
+        if (!isEditMode && link.tips) {
+            card.classList.add('has-tooltip');
+            card.setAttribute('data-tooltip', link.tips);
+        }
+        return card;
+    }
+
+    function setupCardDelegation(container) {
+        if (!container || container._cardDelegation) return;
+        container._cardDelegation = true;
+        container.addEventListener('dragstart', (e) => { const card = e.target.closest('.card'); if (!card) return; dragStart.call(card, e); });
+        container.addEventListener('dragover', (e) => { if (!isEditMode || !e.target.closest('.card-container')) return; dragOver(e); });
+        container.addEventListener('dragend', (e) => { const card = e.target.closest('.card'); if (card) card.classList.remove('dragging'); });
+        container.addEventListener('drop', drop);
+        container.addEventListener('touchstart', (e) => { const card = e.target.closest('.card'); if (!card) return; touchStart(e); }, { passive: false });
+        if (!window.hasAddedCardMenuListener) {
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.card-menu-dropdown') && !e.target.closest('button')) {
+                    document.querySelectorAll('.card-menu-dropdown').forEach(el => el.classList.add('hidden'));
+                }
+            });
+            window.hasAddedCardMenuListener = true;
+        }
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const category = btn.dataset.category;
+            if (action === 'move') moveCategory(category, Number(btn.dataset.dir) || 0);
+            else if (action === 'edit') editCategoryName(category);
+            else if (action === 'pin') pinCategory(category);
+            else if (action === 'delete') deleteCategory(category);
+        });
+        container.addEventListener('change', (e) => {
+            const input = e.target.closest('[data-action="toggleHidden"]');
+            if (!input) return;
+            const tipBox = input.closest('.has-tooltip');
+            if (tipBox) tipBox.setAttribute('data-tooltip', input.checked ? '显示分类' : '隐藏分类');
+            toggleCategoryHidden(input.dataset.category, input.checked);
+        });
+    }
+
+    function updateCategorySelect() {
+        const menu = document.getElementById('category-select-menu');
+        menu.innerHTML = '';
+        Object.keys(categories).forEach(cat => {
+            const item = document.createElement('div');
+            item.className = 'px-4 py-2.5 text-sm text-base-foreground hover:bg-soft cursor-pointer transition-colors';
+            item.textContent = cat;
+            item.onclick = () => {
+                document.getElementById('category-select-value').value = cat;
+                document.getElementById('category-select-text').textContent = cat;
+                menu.classList.add('hidden');
+            };
+            menu.appendChild(item);
+        });
+    }
+
+    function renderCategoryGrid(category) {
+        const grid = document.getElementById(gridId(category));
+        const cat = categories[category];
+        if (!grid || !cat) return;
+        const cardsFragment = document.createDocumentFragment();
+        cat.links.forEach(link => {
+            const card = createCard(link);
+            if (card) cardsFragment.appendChild(card);
+        });
+        Array.from(grid.children).forEach(child => {
+            if (!child.classList.contains('add-card-placeholder')) child.remove();
+        });
+        const placeholder = grid.querySelector('.add-card-placeholder');
+        if (placeholder) grid.insertBefore(cardsFragment, placeholder);
+        else grid.appendChild(cardsFragment);
+    }
+
+    async function addCard() {
+        if (!await validateTokenOrRedirect()) return;
+        const name = document.getElementById('name-input').value.trim();
+        const url = document.getElementById('url-input').value.trim();
+        const category = document.getElementById('category-select-value').value;
+        if (!name || !url || !category) { await customAlert('请填写必要信息 (名称, URL, 分类)'); return; }
+        const newLink = {
+            name, url, category,
+            tips: document.getElementById('tips-input').value.trim(),
+            icon: document.getElementById('icon-input').value.trim(),
+            isPrivate: document.getElementById('private-checkbox').checked
+        };
+        hideAddDialog();
+        categories[category].links.push(newLink);
+        try { await saveLinks(); } catch (e) { await customAlert('添加失败: ' + e); }
+        if (isEditMode || !newLink.isPrivate || isLoggedIn) {
+            renderCategoryGrid(category);
+            updateFooterStats();
+        }
+    }
+
+    async function updateCard(oldLink) {
+        if (!await validateTokenOrRedirect()) return;
+        const updatedLink = {
+            name: document.getElementById('name-input').value.trim(),
+            url: document.getElementById('url-input').value.trim(),
+            tips: document.getElementById('tips-input').value.trim(),
+            icon: document.getElementById('icon-input').value.trim(),
+            category: document.getElementById('category-select-value').value,
+            isPrivate: document.getElementById('private-checkbox').checked
+        };
+        let found = false;
+        let oldCategory = null;
+        if (!updatedLink.category) {
+            for (const c in categories) {
+                if (categories[c].links.some(l => l.url === oldLink.url)) { updatedLink.category = c; break; }
+            }
+        }
+        for (const cat in categories) {
+            const idx = categories[cat].links.findIndex(l => l.url === oldLink.url);
+            if (idx !== -1) {
+                found = true;
+                oldCategory = cat;
+                if (cat === updatedLink.category) categories[cat].links[idx] = updatedLink;
+                else {
+                    categories[cat].links.splice(idx, 1);
+                    if (!categories[updatedLink.category]) categories[updatedLink.category] = { isHidden: false, links: [] };
+                    categories[updatedLink.category].links.push(updatedLink);
+                }
+                break;
+            }
+        }
+        if (!found) {
+            if (!categories[updatedLink.category]) categories[updatedLink.category] = { isHidden: false, links: [] };
+            oldCategory = updatedLink.category;
+            categories[updatedLink.category].links.push(updatedLink);
+        }
+        hideAddDialog();
+        await saveLinks();
+        renderCategoryGrid(oldCategory);
+        if (updatedLink.category !== oldCategory) renderCategoryGrid(updatedLink.category);
+    }
+
+    async function removeCard(card) {
+        if (!await validateTokenOrRedirect()) return;
+        const url = card.getAttribute('data-url');
+        for (const cat in categories) {
+            const idx = categories[cat].links.findIndex(l => l.url === url);
+            if (idx !== -1) { categories[cat].links.splice(idx, 1); break; }
+        }
+        card.remove();
+        await saveLinks();
+        updateFooterStats();
+    }
+
+    function getCardState(card) {
+        if (!card) return { category: null, index: -1 };
+        const section = card.closest('.section');
+        const index = Array.from(section.querySelectorAll('.card')).indexOf(card);
+        const category = section.dataset.category || section.id;
+        return { category: category, index: index };
+    }
+
+    let draggedCard = null;
+    function dragStart(e) {
+        if (!isEditMode) { e.preventDefault(); return; }
+        draggedCard = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = "move";
+        initialDragState = getCardState(this);
+    }
+    function dragOver(e) {
+        if (!isEditMode) return;
+        e.preventDefault();
+        const target = e.target.closest('.card');
+        if (draggedCard && target && target !== draggedCard) {
+            const container = target.parentElement;
+            const rect = target.getBoundingClientRect();
+            if (e.clientX < rect.left + rect.width / 2) container.insertBefore(draggedCard, target);
+            else container.insertBefore(draggedCard, target.nextSibling);
+        }
+    }
+    async function drop(e) {
+        if (!isEditMode) return;
+        e.preventDefault();
+        if (draggedCard) {
+            const newState = getCardState(draggedCard);
+            if (newState.category !== initialDragState.category || newState.index !== initialDragState.index) {
+                updateCardCategory(draggedCard, newState.category);
+                await saveCardOrder();
+            }
+            draggedCard = null;
+        }
+    }
+
+    let mobileDragTimer = null;
+    let isMobileDragging = false;
+    let mobilePlaceholder = null;
+    let mobileClone = null;
+    let mobileTouchOffset = { x: 0, y: 0 };
+    let rafId = null;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+    let lastSwapTime = 0;
+    let activeContainer = null;
+    let cloneWidth = 0;
+    let cloneHeight = 0;
+
+    function touchStart(e) {
+        if (!isEditMode) return;
+        if (e.touches.length > 1) return;
+        const card = e.target.closest('.card');
+        if (!card) return;
+        const touch = e.touches[0];
+        const startX = touch.clientX;
+        const startY = touch.clientY;
+        if (mobileDragTimer) clearTimeout(mobileDragTimer);
+        mobileDragTimer = setTimeout(() => {
+            isMobileDragging = true;
+            mobilePlaceholder = card;
+            activeContainer = mobilePlaceholder.parentElement;
+            initialDragState = getCardState(mobilePlaceholder);
+            const rect = mobilePlaceholder.getBoundingClientRect();
+            cloneWidth = rect.width;
+            cloneHeight = rect.height;
+            mobileTouchOffset.x = startX - rect.left;
+            mobileTouchOffset.y = startY - rect.top;
+            lastTouchX = startX;
+            lastTouchY = startY;
+            mobileClone = mobilePlaceholder.cloneNode(true);
+            Object.assign(mobileClone.style, {
+                position: 'fixed', left: rect.left + 'px', top: rect.top + 'px',
+                width: rect.width + 'px', height: rect.height + 'px',
+                zIndex: '9999', opacity: '0.95',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
+                transform: 'scale(1.05)', transition: 'none'
+            });
+            mobileClone.classList.add('card-clone-dragging');
+            document.body.appendChild(mobileClone);
+            mobilePlaceholder.style.opacity = '0.3';
+            mobilePlaceholder.classList.add('border-dashed', 'border-2', 'border-accent');
+            if (navigator.vibrate) navigator.vibrate(50);
+            updatePosition();
+        }, 500);
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd);
+        document.addEventListener('touchcancel', handleTouchEnd);
+        function updatePosition() {
+            if (!isMobileDragging || !mobileClone) return;
+            mobileClone.style.left = (lastTouchX - mobileTouchOffset.x) + 'px';
+            mobileClone.style.top = (lastTouchY - mobileTouchOffset.y) + 'px';
+            rafId = requestAnimationFrame(updatePosition);
+        }
+        function handleTouchMove(moveEvent) {
+            const moveTouch = moveEvent.touches[0];
+            if (!isMobileDragging) {
+                const diffX = moveTouch.clientX - startX;
+                const diffY = moveTouch.clientY - startY;
+                if (Math.sqrt(diffX * diffX + diffY * diffY) > 10) { clearTimeout(mobileDragTimer); mobileDragTimer = null; }
+                return;
+            }
+            if (isMobileDragging) {
+                moveEvent.preventDefault();
+                lastTouchX = moveTouch.clientX;
+                lastTouchY = moveTouch.clientY;
+                if (Date.now() - lastSwapTime > 30) detectSort(moveTouch.clientX, moveTouch.clientY);
+            }
+        }
+        function detectSort(fingerX, fingerY) {
+            let elementBelow = document.elementFromPoint(fingerX, fingerY);
+            if (!elementBelow) return;
+            let targetCard = elementBelow.closest('.card') || elementBelow.closest('.add-card-placeholder');
+            let targetContainer = targetCard ? targetCard.parentElement : elementBelow.closest('.card-container');
+            if (!targetContainer) return;
+            if (activeContainer !== targetContainer) {
+                activeContainer = targetContainer;
+                const placeholderBtn = activeContainer.querySelector('.add-card-placeholder');
+                if (placeholderBtn) activeContainer.insertBefore(mobilePlaceholder, placeholderBtn);
+                else activeContainer.appendChild(mobilePlaceholder);
+                lastSwapTime = Date.now();
+                return;
+            }
+            const containerRect = activeContainer.getBoundingClientRect();
+            const cloneViewportCenterX = lastTouchX - mobileTouchOffset.x + (cloneWidth / 2);
+            const cloneViewportCenterY = lastTouchY - mobileTouchOffset.y + (cloneHeight / 2);
+            const cloneRelX = cloneViewportCenterX - containerRect.left + activeContainer.scrollLeft;
+            const cloneRelY = cloneViewportCenterY - containerRect.top + activeContainer.scrollTop;
+            const siblings = Array.from(activeContainer.children).filter(c =>
+                (c.classList.contains('card') || c.classList.contains('add-card-placeholder')) && c !== mobilePlaceholder
+            );
+            if (siblings.length === 0) return;
+            let closestElement = null;
+            let minDistance = Infinity;
+            for (const child of siblings) {
+                const childCenterX = child.offsetLeft + child.offsetWidth / 2;
+                const childCenterY = child.offsetTop + child.offsetHeight / 2;
+                const dist = Math.hypot(cloneRelX - childCenterX, cloneRelY - childCenterY);
+                if (dist < minDistance) { minDistance = dist; closestElement = child; }
+            }
+            if (closestElement) {
+                const positionsBefore = new Map();
+                const allChildren = Array.from(activeContainer.children).filter(el =>
+                    el.classList.contains('card') || el.classList.contains('add-card-placeholder')
+                );
+                allChildren.forEach(el => positionsBefore.set(el, el.getBoundingClientRect()));
+                const placeholderIndex = allChildren.indexOf(mobilePlaceholder);
+                const targetIndex = allChildren.indexOf(closestElement);
+                if (targetIndex > placeholderIndex) activeContainer.insertBefore(mobilePlaceholder, closestElement.nextSibling);
+                else activeContainer.insertBefore(mobilePlaceholder, closestElement);
+                animateFlip(activeContainer, positionsBefore);
+                lastSwapTime = Date.now();
+                if (navigator.vibrate) navigator.vibrate(10);
+            }
+        }
+        function animateFlip(container, positionsBefore) {
+            const siblings = Array.from(container.children);
+            siblings.forEach(el => {
+                if (el === mobilePlaceholder) return;
+                const rectAfter = el.getBoundingClientRect();
+                const rectBefore = positionsBefore.get(el);
+                if (rectBefore && (rectBefore.left !== rectAfter.left || rectBefore.top !== rectAfter.top)) {
+                    const dx = rectBefore.left - rectAfter.left;
+                    const dy = rectBefore.top - rectAfter.top;
+                    el.style.transition = 'none';
+                    el.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+                    el.offsetHeight;
+                    el.style.transition = 'transform 0.2s cubic-bezier(0.2, 0, 0.2, 1)';
+                    el.style.transform = '';
+                    setTimeout(() => { if (el.style.transform === '') el.style.transition = ''; }, 200);
+                }
+            });
+        }
+        function handleTouchEnd() {
+            if (mobileDragTimer) { clearTimeout(mobileDragTimer); mobileDragTimer = null; }
+            if (rafId) cancelAnimationFrame(rafId);
+            if (isMobileDragging) {
+                if (mobileClone && mobilePlaceholder) {
+                    const rect = mobilePlaceholder.getBoundingClientRect();
+                    mobileClone.style.transition = 'all 0.2s ease-out';
+                    mobileClone.style.left = rect.left + 'px';
+                    mobileClone.style.top = rect.top + 'px';
+                    mobileClone.style.opacity = '0';
+                    setTimeout(() => {
+                        if (mobileClone) mobileClone.remove();
+                        if (mobilePlaceholder) {
+                            mobilePlaceholder.style.opacity = '';
+                            mobilePlaceholder.classList.remove('border-dashed', 'border-2', 'border-accent');
+                        }
+                        saveCardOrder();
+                        mobilePlaceholder = null;
+                        mobileClone = null;
+                    }, 200);
+                } else {
+                    if (mobileClone) mobileClone.remove();
+                    if (mobilePlaceholder) mobilePlaceholder.style.opacity = '';
+                }
+                document.body.style.overflow = '';
+            }
+            isMobileDragging = false;
+            cleanupListeners();
+        }
+        function cleanupListeners() {
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
+            document.removeEventListener('touchcancel', handleTouchEnd);
+        }
+    }
+
+    function updateCardCategory(card, newCategory) {
+        const url = card.getAttribute('data-url');
+        let item = null;
+        for (const cat in categories) {
+            const idx = categories[cat].links.findIndex(l => l.url === url);
+            if (idx !== -1) { item = categories[cat].links.splice(idx, 1)[0]; break; }
+        }
+        if (item) { item.category = newCategory; categories[newCategory].links.push(item); }
+    }
+
+    async function saveCardOrder() {
+        const newCategories = {};
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(sec => {
+            const catName = sec.dataset.category || sec.id;
+            const oldCat = categories[catName];
+            newCategories[catName] = { isHidden: oldCat ? oldCat.isHidden : false, links: [] };
+            const cards = sec.querySelectorAll('.card');
+            cards.forEach(c => {
+                const url = c.getAttribute('data-url');
+                const original = Object.values(categories).flatMap(x => x.links).find(l => l.url === url);
+                if (original) { original.category = catName; newCategories[catName].links.push(original); }
+            });
+        });
+        Object.keys(categories).forEach(k => delete categories[k]);
+        Object.assign(categories, newCategories);
+        await saveDataToServer('保存排序', categories);
+    }
+
+    function applyTheme(isDark) {
+        if (isDark) document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+        if (typeof window.__getThemeData === 'function') window.__applyThemeVars(window.__getThemeData(), isDark);
+        updateThemeSwitchUI();
+        const ov = document.getElementById('theme-dialog-overlay');
+        if (ov && !ov.classList.contains('overlay-hidden') && typeof refreshThemeUI === 'function') refreshThemeUI();
+    }
+
+    function updateThemeSwitchUI() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const checkbox = document.getElementById('theme-switch-checkbox');
+        if (checkbox) checkbox.checked = isDark;
+    }
+
+    const BUILTIN_THEMES = [
+        { id: 'default', name: '默认配色', tags: ['清爽绿'], preview: { light: { background: '#ffffff', foreground: '#334155', primary: '#16a34a', secondary: '#f1f5f9', accent: '#4ade80' }, dark: { background: '#0f172a', foreground: '#e2e8f0', primary: '#4ade80', secondary: '#1e293b', accent: '#22c55e' } }, builtin: true },
+        { id: 'claude', name: 'Claude', tags: ['暖色'], preview: { light: { background: '#faf9f5', foreground: '#4a4540', primary: '#d97757', secondary: '#ece9e2', accent: '#e9e5dc' }, dark: { background: '#262624', foreground: '#d4cfc4', primary: '#cd6e4e', secondary: '#3d3c38', accent: '#33322e' } } },
+        { id: 'amethyst-haze', name: 'Amethyst Haze', tags: ['优雅紫'], preview: { light: { background: '#f5f3f8', foreground: '#4a4160', primary: '#7c5fa8', secondary: '#cbbde0', accent: '#d8a2b8' }, dark: { background: '#251f33', foreground: '#e7e2f1', primary: '#9d82c4', secondary: '#4a4160', accent: '#b0748f' } } },
+        { id: 'catppuccin', name: 'Catppuccin', tags: ['柔和'], preview: { light: { background: '#eff1f5', foreground: '#4c4f69', primary: '#7287fd', secondary: '#ccd0da', accent: '#f9b8c4' }, dark: { background: '#303446', foreground: '#c6d0f5', primary: '#a6d189', secondary: '#414559', accent: '#f2d5cf' } } },
+        { id: 'kodama-grove', name: 'Kodama Grove', tags: ['自然绿'], preview: { light: { background: '#f4f7f2', foreground: '#3a4a3a', primary: '#4a7c59', secondary: '#dfe8dd', accent: '#8fbf9f' }, dark: { background: '#1f2a22', foreground: '#dce8dc', primary: '#7fb98b', secondary: '#34453a', accent: '#5d8f6f' } } },
+        { id: 'quantum-rose', name: 'Quantum Rose', tags: ['玫粉'], preview: { light: { background: '#fdf2f5', foreground: '#5a3a45', primary: '#e2559a', secondary: '#f6dbe4', accent: '#f2a4c4' }, dark: { background: '#2a1c24', foreground: '#f5ddea', primary: '#e87ea8', secondary: '#4a3340', accent: '#c25a86' } } },
+        { id: 'elegant-luxury', name: 'Elegant Luxury', tags: ['沉稳'], preview: { light: { background: '#f8f6f2', foreground: '#3c3830', primary: '#b08968', secondary: '#e9e2d6', accent: '#c9b69a' }, dark: { background: '#211c18', foreground: '#e8e0d4', primary: '#cba47f', secondary: '#3a322a', accent: '#a58160' } } },
+        { id: 'neo-brutalism', name: 'Neo Brutalism', tags: ['高饱和'], preview: { light: { background: '#fff8e7', foreground: '#1a1a1a', primary: '#f04b3c', secondary: '#ffd23f', accent: '#5ac8fa' }, dark: { background: '#1a1a1a', foreground: '#fff8e7', primary: '#ff6b5e', secondary: '#ffd23f', accent: '#5ac8fa' } } },
+        { id: 'graphite', name: 'Graphite', tags: ['极简灰'], preview: { light: { background: '#f5f5f5', foreground: '#333333', primary: '#71717a', secondary: '#e4e4e7', accent: '#a1a1aa' }, dark: { background: '#18181b', foreground: '#d4d4d8', primary: '#a1a1aa', secondary: '#27272a', accent: '#71717a' } } }
+    ];
+
+    function getThemeMeta(key, fallback) { const v = localStorage.getItem(key); return v === null ? fallback : v; }
+    function getThemeName() { return getThemeMeta('themeName', null); }
+    function getThemeKind() { return getThemeMeta('themeKind', window.__getThemeData() ? 'custom' : 'default'); }
+    function isInternalThemeSource(s) { if (!s) return false; return s.indexOf('tweakcn:') === 0 || s.indexOf('json:') === 0 || s === 'file'; }
+    function safeSetItem(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+    function safeRemoveItem(k) { try { localStorage.removeItem(k); } catch (e) { } }
+
+    function snapshotCurrentTheme() {
+        return { themeData: window.__getThemeData(), themeSource: getThemeMeta('themeSource', null), themeName: getThemeName(), themeKind: getThemeKind() };
+    }
+    function saveLastSnapshot(from) { try { localStorage.setItem('lastTheme', JSON.stringify(from)); } catch (e) { } }
+    function getLastSnapshot() { try { return JSON.parse(localStorage.getItem('lastTheme') || 'null'); } catch (e) { return null; } }
+    function lastSnapshotExists() { return !!getLastSnapshot(); }
+
+    function themeStatusLabel(kind, name) {
+        switch (kind) {
+            case 'builtin': return name || '内置主题';
+            case 'ai': return 'AI · ' + (name || '生成主题');
+            case 'custom': return name ? '自定义主题（' + name + '）' : '自定义主题';
+            default: return '默认配色';
+        }
+    }
+
+    function renderThemeStatusBar() {
+        const bar = document.getElementById('theme-status-bar');
+        if (!bar) return;
+        const data = window.__getThemeData();
+        const kind = getThemeKind();
+        const name = getThemeName();
+        const isDark = document.documentElement.classList.contains('dark');
+        const label = themeStatusLabel(kind, name);
+        const guideMap = {
+            default: '选一个喜欢的卡片即可换肤，点击后立刻生效。',
+            builtin: '点其他卡片可一键切换；不满意可回退上一套。',
+            custom: '点其他卡片可一键切换；不满意可回退上一套。',
+            ai: '点其他卡片可一键切换；不满意可回退上一套。'
+        };
+        const guide = document.getElementById('theme-guide');
+        if (guide) guide.textContent = guideMap[kind] || guideMap.default;
+        let swatches = ['#16a34a', '#f1f5f9', '#4ade80'];
+        const b = kind === 'default' ? null : BUILTIN_THEMES.find(t => t.name === name);
+        if (data && b) { const p = b.preview[isDark ? 'dark' : 'light']; swatches = [p.primary, p.secondary, p.accent]; }
+        bar.innerHTML =
+            '<div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 rounded-[var(--radius-xl)] bg-muted">' +
+              '<div class="flex items-center gap-2 min-w-0">' +
+                '<span class="shrink-0 flex gap-1">' +
+                  swatches.map(c => '<span class="inline-block w-3.5 h-3.5 rounded-full border" style="background:' + esc(c) + ';border-color:rgba(128,128,128,0.35)"></span>').join('') +
+                '</span>' +
+                '<span class="truncate text-sm font-medium text-base-foreground">' + esc('当前：' + label) + '</span>' +
+              '</div>' +
+              '<span class="flex items-center gap-2 shrink-0 basis-full md:basis-auto max-w-full">' +
+                (isLoggedIn && _themePushFailed ? '<button onclick="retryThemePush()" class="px-2.5 py-1.5 rounded-[var(--radius-xl)] text-xs font-medium text-amber-600 hover:bg-secondary transition-colors shrink-0">未同步 · 重试</button>' : '') +
+                (lastSnapshotExists() ? '<button onclick="restoreLastTheme()" class="px-2.5 py-1.5 rounded-[var(--radius-xl)] text-xs font-medium text-muted-foreground hover:bg-secondary transition-colors">回退上一套</button>' : '') +
+                '<button onclick="resetCustomTheme()" class="px-2.5 py-1.5 rounded-[var(--radius-xl)] text-xs font-medium text-muted-foreground hover:bg-secondary transition-colors">恢复默认</button>' +
+              '</span>' +
+            '</div>';
+        renderThemeKindToggle();
+    }
+    function renderThemeKindToggle() {
+        const el = document.getElementById('theme-kind-toggle');
+        if (el) el.textContent = '跟随「' + (document.documentElement.classList.contains('dark') ? '深色' : '浅色') + '」模式';
+    }
+
+    function themeCardHTML(t) {
+        const isDark = document.documentElement.classList.contains('dark');
+        const p = t.preview[isDark ? 'dark' : 'light'];
+        const data = window.__getThemeData();
+        const kind = getThemeKind();
+        const isActive = (t.id === 'default') ? !data : (kind === 'builtin' && getThemeName() === t.name);
+        const borderColor = isActive ? p.primary : 'rgba(128,128,128,0.25)';
+        return '<button type="button" data-theme-id="' + esc(t.id) + '" data-theme-name="' + esc(t.name) + '" ' +
+            'class="theme-card w-full text-left rounded-2xl px-3 py-2.5 border transition-all duration-150 hover:translate-y-[-2px] hover:shadow-lg ' + (isActive ? 'theme-card-active' : '') + '" ' +
+            'style="background:' + esc(p.background) + ';border-color:' + esc(borderColor) + ';color:' + esc(p.foreground) + (isActive ? ';--ring-color:' + esc(p.primary) : '') + '">' +
+            '<div class="flex items-center justify-between gap-2 mb-2">' +
+              '<div class="flex gap-1 shrink-0">' +
+                '<span class="inline-block w-3 h-3 rounded-sm border" style="background:' + esc(p.primary) + ';border-color:rgba(128,128,128,0.35)"></span>' +
+                '<span class="inline-block w-3 h-3 rounded-sm border" style="background:' + esc(p.secondary) + ';border-color:rgba(128,128,128,0.35)"></span>' +
+                '<span class="inline-block w-3 h-3 rounded-sm border" style="background:' + esc(p.accent) + ';border-color:rgba(128,128,128,0.35)"></span>' +
+              '</div>' +
+              '<span class="text-[10px] opacity-70 truncate">' + esc(t.tags.join(' · ')) + '</span>' +
+            '</div>' +
+            '<div class="flex items-center justify-between gap-2">' +
+              '<div class="text-sm font-semibold truncate min-w-0">' + esc(t.name) + '</div>' +
+              (isActive ? '<span class="shrink-0 text-[10px] font-medium px-1.5 py-0.5 rounded-full" style="background:' + esc(p.primary) + ';color:' + esc(p.background) + '">使用中</span>' : '') +
+            '</div>' +
+            '</button>';
+    }
+
+    let activeThemeLoadP = null;
+    function renderThemeGrid() {
+        const grid = document.getElementById('theme-grid');
+        if (!grid) return;
+        grid.innerHTML = BUILTIN_THEMES.map(themeCardHTML).join('');
+        grid.querySelectorAll('.theme-card').forEach(c => c.addEventListener('click', onThemeCardClick));
+    }
+
+    async function onThemeCardClick(e) {
+        const card = e.currentTarget;
+        if (activeThemeLoadP) return;
+        const id = card.dataset.themeId;
+        const name = card.dataset.themeName;
+        if (id === 'default') { applyDefaultTheme(); return; }
+        await applyBuiltinById(id, name);
+    }
+    async function applyBuiltinById(id, name) {
+        saveLastSnapshot(snapshotCurrentTheme());
+        setCardLoading(true, name);
+        try {
+            const t = await fetchTheme(id);
+            if (!t) throw new Error('主题数据为空');
+            const themeLayer = t.theme || {};
+            const tLight = Object.assign({}, themeLayer, t.light || {});
+            const tDark = Object.assign({}, themeLayer, t.dark || t.light || {});
+            cacheTheme(id, t);
+            const meta = BUILTIN_THEMES.find(b => b.id === id);
+            applyThemeData({ data: { light: tLight, dark: tDark, theme: themeLayer, fonts: t.fonts || themeLayer.fonts || null }, name: meta ? meta.name : name, kind: 'builtin', source: 'tweakcn:' + id });
+        } catch (err) {
+            safeRemoveItem('lastTheme');
+            setThemeError('获取失败：' + err.message + '，已保留原主题');
+        } finally {
+            if (activeThemeLoadP) setCardLoading(false);
+        }
+    }
+
+    function restoreSiteDefaultTheme() {
+        safeRemoveItem('themeData'); safeRemoveItem('themeSource'); safeRemoveItem('themeName'); safeRemoveItem('themeKind');
+        safeSetItem('themeUpdatedAt', String(Date.now()));
+        safeSetItem('themePersonal', isLoggedIn ? '0' : '1');
+        window.__applyThemeVars(null, document.documentElement.classList.contains('dark'));
+        const input = document.getElementById('theme-input');
+        if (input) input.value = '';
+        setCardLoading(false);
+        refreshThemeUI();
+    }
+    function applyDefaultTheme() {
+        if (!window.__getThemeData() && !getThemeName()) { refreshThemeUI(); return; }
+        saveLastSnapshot(snapshotCurrentTheme());
+        restoreSiteDefaultTheme();
+        scheduleThemeSync();
+    }
+
+    function applyThemeData({ data, name, kind, source }) {
+        if (name != null) safeSetItem('themeName', name); else safeRemoveItem('themeName');
+        safeSetItem('themeKind', kind || 'custom');
+        safeSetItem('themeData', JSON.stringify(data));
+        if (source != null) safeSetItem('themeSource', source); else safeRemoveItem('themeSource');
+        safeSetItem('themeUpdatedAt', String(Date.now()));
+        safeSetItem('themePersonal', '1');
+        window.__applyThemeVars(data, document.documentElement.classList.contains('dark'));
+        setCardLoading(false);
+        refreshThemeUI();
+        scheduleThemeSync();
+    }
+
+    function collectLocalTheme() {
+        return {
+            themeData: window.__getThemeData() || null,
+            name: getThemeName() || '',
+            kind: getThemeMeta('themeKind', '') || '',
+            source: getThemeMeta('themeSource', '') || ''
+        };
+    }
+    let _themeSyncTimer = null;
+    let _themePushFailed = false;
+    function scheduleThemeSync() {
+        if (!isLoggedIn) return;
+        clearTimeout(_themeSyncTimer);
+        _themeSyncTimer = setTimeout(pushThemeToKv, 800);
+    }
+
+    document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden' && isLoggedIn && _themeSyncTimer) {
+            clearTimeout(_themeSyncTimer);
+            _themeSyncTimer = null;
+            try {
+                fetchWithAuth('/api/saveTheme', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(collectLocalTheme()),
+                    keepalive: true
+                }).catch(function () { });
+            } catch (e) { }
+        }
+    });
+
+    function retryThemePush() { pushThemeToKv(); }
+    async function pushThemeToKv() {
+        if (!isLoggedIn) return;
+        _themeSyncTimer = null;
+        let ok = false;
+        try {
+            const res = await fetchWithAuth('/api/saveTheme', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(collectLocalTheme())
+            });
+            if (res.ok) {
+                const j = await res.json();
+                if (j && j.updatedAt) { safeSetItem('themeUpdatedAt', String(j.updatedAt)); safeSetItem('themePersonal', '0'); ok = true; }
+            }
+        } catch (e) { }
+        if (_themePushFailed !== ok) { _themePushFailed = !ok; renderThemeStatusBar(); }
+    }
+
+    async function pullThemeFromKv() {
+        if (!isLoggedIn) return;
+        try {
+            const res = await fetchWithAuth('/api/getTheme');
+            if (!res.ok) return;
+            const j = await res.json();
+            const remote = j && j.theme;
+            if (!remote || remote.updatedAt == null) return;
+            const local = Number(localStorage.getItem('themeUpdatedAt') || 0);
+            if (remote.updatedAt <= local) return;
+            if (remote.themeData) {
+                safeSetItem('themeData', JSON.stringify(remote.themeData));
+                if (remote.name) safeSetItem('themeName', remote.name); else safeRemoveItem('themeName');
+                safeSetItem('themeKind', remote.kind || 'custom');
+                if (remote.source) safeSetItem('themeSource', remote.source); else safeRemoveItem('themeSource');
+                window.__applyThemeVars(remote.themeData, document.documentElement.classList.contains('dark'));
+            } else {
+                safeRemoveItem('themeData'); safeRemoveItem('themeName'); safeRemoveItem('themeKind'); safeRemoveItem('themeSource');
+                window.__applyThemeVars(null, document.documentElement.classList.contains('dark'));
+            }
+            safeSetItem('themeUpdatedAt', String(remote.updatedAt));
+            safeSetItem('themePersonal', '0');
+            if (typeof refreshThemeUI === 'function') refreshThemeUI();
+        } catch (e) { }
+    }
+
+    function restoreLastTheme() {
+        const last = getLastSnapshot();
+        if (!last) return;
+        const current = snapshotCurrentTheme();
+        saveLastSnapshot(current);
+        setCardLoading(false);
+        if (last.themeData) applyThemeData({ data: last.themeData, name: last.themeName, kind: last.themeKind || 'custom', source: last.themeSource });
+        else { restoreSiteDefaultTheme(); scheduleThemeSync(); }
+        const input = document.getElementById('theme-input');
+        const src = getThemeMeta('themeSource', '');
+        if (input) input.value = isInternalThemeSource(src) ? '' : src;
+    }
+
+    function getCacheKey(id) { return 'themeCache:' + id; }
+    function cacheTheme(id, t) {
+        try {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i);
+                if (k && k.indexOf('themeCache:') === 0) keys.push(k);
+            }
+            if (keys.length >= 8) { const oldest = keys[0]; if (oldest) localStorage.removeItem(oldest); }
+            localStorage.setItem(getCacheKey(id), JSON.stringify(t));
+        } catch (e) { }
+    }
+    function getCachedTheme(id) {
+        try { return JSON.parse(localStorage.getItem(getCacheKey(id)) || 'null'); } catch (e) { return null; }
+    }
+
+    function setCardLoading(on, name) {
+        document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('theme-card-disabled', !!on));
+        activeThemeLoadP = on ? true : null;
+        if (on) {
+            const bar = document.getElementById('theme-status-bar');
+            const txt = bar && bar.querySelector('span.truncate');
+            if (txt) txt.textContent = '正在应用' + (name ? ' ' + name : '') + '…';
+        } else { renderThemeStatusBar(); renderThemeGrid(); }
+    }
+    function setThemeError(msg) {
+        const bar = document.getElementById('theme-status-bar');
+        if (bar) {
+            bar.innerHTML = '<div class="flex items-center justify-between gap-3 py-3 px-4 rounded-[var(--radius-xl)] bg-muted">' +
+                '<span class="text-sm text-red-500">' + esc(msg) + '</span>' +
+                '<button onclick="closeThemeDialog()" class="px-2.5 py-1.5 rounded-[var(--radius-xl)] text-xs font-medium text-accent hover:bg-secondary transition-colors shrink-0">确定</button>' +
+                '</div>';
+        }
+    }
+    function refreshThemeUI() { renderThemeStatusBar(); renderThemeGrid(); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+    function themeStatus(msg, isError) {
+        const el = document.getElementById('theme-status');
+        if (!el) return;
+        if (!msg) { el.textContent = ''; el.classList.add('hidden'); return; }
+        el.textContent = msg;
+        el.style.color = isError ? '#ef4444' : 'var(--muted-foreground)';
+        el.classList.remove('hidden');
+    }
+    function openThemeDialog() {
+        const input = document.getElementById('theme-input');
+        const saved = getThemeMeta('themeSource', '');
+        if (input) input.value = isInternalThemeSource(saved) ? '' : saved;
+        const overlay = document.getElementById('theme-dialog-overlay');
+        if (overlay) { overlay.classList.remove('hidden'); void overlay.offsetWidth; overlay.classList.remove('overlay-hidden'); overlay.classList.add('overlay-visible'); }
+        const box = document.getElementById('theme-dialog-box');
+        if (box) { box.classList.remove('dialog-scale-hidden'); box.classList.add('dialog-scale-visible'); }
+        lockPageScroll();
+        refreshThemeUI();
+        themeStatus('', false);
+    }
+    function closeThemeDialog() {
+        const overlay = document.getElementById('theme-dialog-overlay');
+        if (overlay) { overlay.classList.remove('overlay-visible'); overlay.classList.add('overlay-hidden'); }
+        const box = document.getElementById('theme-dialog-box');
+        if (box) { box.classList.remove('dialog-scale-visible'); box.classList.add('dialog-scale-hidden'); }
+        unlockPageScroll();
+        setTimeout(() => { if (overlay && overlay.classList.contains('overlay-hidden')) overlay.classList.add('hidden'); }, 300);
+    }
+
+    const THEME_JSON_MAX = 256 * 1024;
+
+    function setThemeJsonStatus(elId, msg, isError) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        if (!msg) { el.classList.add('hidden'); return; }
+        el.textContent = msg;
+        el.style.color = isError ? '#ef4444' : 'var(--muted-foreground)';
+        el.classList.remove('hidden');
+    }
+
+    function buildThemeExportJson() {
+        const data = window.__getThemeData();
+        if (!data) return null;
+        const kind = getThemeKind();
+        return JSON.stringify({
+            type: 'cfile-theme', version: 1,
+            name: getThemeName() || '自定义主题',
+            kind: kind === 'builtin' ? 'builtin' : 'custom',
+            data: data, exportedAt: Date.now()
+        }, null, 2);
+    }
+
+    function openThemeExportDialog() {
+        let json = null;
+        try { json = buildThemeExportJson(); } catch (e) { }
+        if (!json) { setThemeJsonStatus('theme-json-entry-status', '当前是默认主题，暂无可导出的自定义主题', true); return; }
+        setThemeJsonStatus('theme-json-entry-status', '', false);
+        document.getElementById('theme-export-text').value = json;
+        setThemeJsonStatus('theme-export-status', '', false);
+        toggleOverlay('theme-export-overlay', true);
+    }
+    function closeThemeExportDialog() { toggleOverlay('theme-export-overlay', false); }
+
+    function copyThemeJson() {
+        const ta = document.getElementById('theme-export-text');
+        const done = () => setThemeJsonStatus('theme-export-status', '已复制到剪贴板。', false);
+        const fallback = () => {
+            try { ta.removeAttribute('readonly'); ta.select(); document.execCommand('copy'); ta.setAttribute('readonly', ''); } catch (e) { }
+            setThemeJsonStatus('theme-export-status', '剪贴板不可用，已选中文本，可按 Ctrl/Cmd+C 手动复制。', true);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done, fallback);
+        else fallback();
+    }
+
+    function downloadThemeJson() {
+        const ta = document.getElementById('theme-export-text');
+        if (!ta.value) { setThemeJsonStatus('theme-export-status', '没有可下载的内容', true); return; }
+        try {
+            let name = 'theme';
+            try { name = (JSON.parse(ta.value).name || 'theme'); } catch (e) { }
+            const _nm = String(name), _bad = [47, 92, 58, 42, 63, 34, 60, 62, 124];
+            let _out = '';
+            for (let _i = 0; _i < _nm.length; _i++) {
+                const _c = _nm.charCodeAt(_i);
+                if (_c < 32 || _c === 127 || _bad.indexOf(_c) >= 0) continue;
+                _out += _nm[_i];
+            }
+            const safeName = _out.slice(0, 40) || 'theme';
+            const blob = new Blob([ta.value], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = safeName + '_' + new Date().toISOString().split('T')[0] + '.json';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            setThemeJsonStatus('theme-export-status', '已下载：' + a.download, false);
+        } catch (e) { setThemeJsonStatus('theme-export-status', '导出失败', true); }
+    }
+
+    let _themeImportStage = 0;
+    let _themeImportReady = null;
+
+    function resetThemeImportStage() {
+        _themeImportStage = 0;
+        _themeImportReady = null;
+        const btn = document.getElementById('theme-import-apply-btn');
+        if (btn) { btn.textContent = '应用'; btn.classList.remove('!text-red-600', '!bg-red-500/10'); }
+    }
+
+    function openThemeImportDialog() {
+        resetThemeImportStage();
+        setThemeJsonStatus('theme-import-status', '', false);
+        setThemeJsonStatus('theme-json-entry-status', '', false);
+        toggleOverlay('theme-import-overlay', true);
+    }
+    function closeThemeImportDialog() { resetThemeImportStage(); toggleOverlay('theme-import-overlay', false); }
+
+    function pickThemeFile() {
+        const fi = document.getElementById('theme-import-file');
+        if (!fi) return;
+        fi.value = '';
+        fi.onchange = (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            if (file.size > THEME_JSON_MAX) { setThemeJsonStatus('theme-import-status', '文件过大（上限 256KB），请检查文件', true); return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    document.getElementById('theme-import-text').value = String(ev.target.result || '');
+                    resetThemeImportStage();
+                    setThemeJsonStatus('theme-import-status', '文件已读取，请点击「应用」完成导入。', false);
+                } catch (err) { setThemeJsonStatus('theme-import-status', '文件读取异常', true); }
+            };
+            reader.onerror = () => setThemeJsonStatus('theme-import-status', '文件读取失败，请重试', true);
+            reader.readAsText(file);
+        };
+        fi.click();
+    }
+
+    function applyThemeJsonFlow() {
+        const btn = document.getElementById('theme-import-apply-btn');
+        if (_themeImportStage === 1 && _themeImportReady) {
+            const ready = _themeImportReady;
+            resetThemeImportStage();
+            try {
+                saveLastSnapshot(snapshotCurrentTheme());
+                applyThemeData({ data: ready.data, name: ready.name || '导入主题', kind: 'custom', source: 'json:' + (ready.name || 'import') });
+                closeThemeImportDialog();
+                setThemeJsonStatus('theme-json-entry-status', '主题导入成功（已保存，可点「回退上一套」撤销）。', false);
+            } catch (e) { setThemeJsonStatus('theme-import-status', '应用主题失败：' + e.message, true); }
+            return;
+        }
+        const text = (document.getElementById('theme-import-text').value || '').trim();
+        if (!text) { setThemeJsonStatus('theme-import-status', '请先粘贴 JSON 或选择文件', true); return; }
+        if (text.length > THEME_JSON_MAX) { setThemeJsonStatus('theme-import-status', '内容过大（上限 256KB）', true); return; }
+        let parsed;
+        try { parsed = JSON.parse(text); } catch (e) { setThemeJsonStatus('theme-import-status', 'JSON 格式无效，请检查内容', true); return; }
+        let result;
+        try { result = window.__sanitizeThemeData(parsed); } catch (e) { setThemeJsonStatus('theme-import-status', '主题数据校验失败', true); return; }
+        if (!result || !result.data) { setThemeJsonStatus('theme-import-status', '文件中没有有效的主题变量（需包含 light 或 dark 色值）', true); return; }
+        _themeImportReady = result;
+        _themeImportStage = 1;
+        if (btn) { btn.textContent = '确认覆盖导入'; btn.classList.add('!text-red-600', '!bg-red-500/10'); }
+        setThemeJsonStatus('theme-import-status', '校验通过（共 ' + result.validCount + ' 个变量）。再次点击将覆盖当前主题。', false);
+    }
+
+    (function bindThemeImportReset() {
+        const ta = document.getElementById('theme-import-text');
+        if (ta) ta.addEventListener('input', () => {
+            if (_themeImportStage === 1) { resetThemeImportStage(); setThemeJsonStatus('theme-import-status', '', false); }
+        });
+    })();
+    function extractThemeId(url) {
+        const s = String(url || '').trim();
+        if (!s) return null;
+        const parts = s.split(/[?#]/)[0].split('/');
+        const idx = parts.lastIndexOf('themes');
+        const cand = idx >= 0 && parts[idx + 1] ? parts[idx + 1] : (parts.length === 1 ? parts[0] : '');
+        const bare = (cand || '').trim();
+        return /^[A-Za-z0-9_-]+$/.test(bare) ? bare : null;
+    }
+
+    async function fetchWithTimeout(url, ms) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(function () { ctrl.abort(); }, ms || 8000);
+        try { return await fetch(url, { signal: ctrl.signal }); }
+        finally { clearTimeout(timer); }
+    }
+    async function fetchTheme(id) {
+        const cached = getCachedTheme(id);
+        if (cached) return cached;
+        const endpoints = ['/api/theme-proxy?id=' + encodeURIComponent(id), 'https://tweakcn.com/r/themes/' + encodeURIComponent(id)];
+        for (const ep of endpoints) {
+            try {
+                const res = await fetchWithTimeout(ep);
+                if (!res.ok) continue;
+                const data = await res.json();
+                const cssVars = data && data.cssVars;
+                if (!cssVars) continue;
+                const t = (cssVars.light || cssVars.dark) ? cssVars : (cssVars.theme || null);
+                if (t) { if (data.name && !t.name) t.name = data.name; return t; }
+            } catch (e) { }
+        }
+        throw new Error('无法获取主题，请检查链接或网络');
+    }
+    async function applyCustomTheme() {
+        if (activeThemeLoadP) return;
+        const input = document.getElementById('theme-input');
+        const url = input ? input.value.trim() : '';
+        const id = extractThemeId(url);
+        themeStatus('正在加载主题...', false);
+        if (!id) { themeStatus('链接无效，请提供 tweakcn 主题链接', true); return; }
+        saveLastSnapshot(snapshotCurrentTheme());
+        try {
+            const t = await fetchTheme(id);
+            const themeLayer = t.theme || {};
+            const tLight = Object.assign({}, themeLayer, t.light || {});
+            const tDark = Object.assign({}, themeLayer, t.dark || t.light || {});
+            const themeData = { light: tLight, dark: tDark, theme: themeLayer, fonts: t.fonts || themeLayer.fonts || null };
+            if (!Object.keys(themeData.light).length) throw new Error('主题数据为空');
+            const builtin = BUILTIN_THEMES.find(b => b.id === id);
+            cacheTheme(id, t);
+            applyThemeData({ data: themeData, name: builtin ? builtin.name : (t.name || id), kind: builtin ? 'builtin' : 'custom', source: url });
+            themeStatus('主题应用成功（已保存）。', false);
+        } catch (e) {
+            safeRemoveItem('lastTheme');
+            themeStatus('主题应用失败：' + e.message + '，已保留原主题', true);
+        }
+    }
+    function resetCustomTheme() {
+        if (!window.__getThemeData() && !getThemeName()) { refreshThemeUI(); return; }
+        saveLastSnapshot(snapshotCurrentTheme());
+        restoreSiteDefaultTheme();
+        themeStatus('已恢复默认配色。', false);
+        scheduleThemeSync();
+    }
+
+    (function initThemeDialogClose() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            const exportOv = document.getElementById('theme-export-overlay');
+            if (exportOv && !exportOv.classList.contains('hidden')) { closeThemeExportDialog(); return; }
+            const importOv = document.getElementById('theme-import-overlay');
+            if (importOv && !importOv.classList.contains('hidden')) { closeThemeImportDialog(); return; }
+            const ov = document.getElementById('theme-dialog-overlay');
+            if (ov && !ov.classList.contains('overlay-hidden')) closeThemeDialog();
+        });
+    })();
+
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    async function toggleEditMode() {
+        document.getElementById('profile-dropdown').classList.add('hidden');
+        if (!isLoggedIn) { toggleLogin(); return; }
+        if (!isEditMode) {
+            isEditMode = true;
+            updateUIState();
+            renderCategories();
+            updateFooterStats();
+        } else {
+            isEditMode = false;
+            updateUIState();
+            renderCategories();
+            updateFooterStats();
+        }
+    }
+
+    async function toggleLogin() {
+        document.getElementById('profile-dropdown').classList.add('hidden');
+        if (!isLoggedIn) {
+            authMode = 'admin';
+            pendingAdminAction = null;
+            document.getElementById('password-input').value = '';
+            const hint = document.getElementById('password-dialog-hint');
+            if (hint) hint.textContent = '请输入管理员密码以继续操作';
+            toggleOverlay('password-dialog-overlay', true);
+            setTimeout(() => { try { document.getElementById('password-input').focus(); } catch (e) { } }, 100);
+        } else {
+            if (await customConfirm('确定退出登录吗？')) logout();
+        }
+    }
+
+    function toggleGuestLogin() {
+        document.getElementById('profile-dropdown').classList.add('hidden');
+        if (isLoggedIn) { customAlert('管理员已登录，无需访客登录'); return; }
+        if (isGuest) {
+            customConfirm('确定退出访客模式吗？').then(ok => {
+                if (!ok) return;
+                localStorage.removeItem('guestToken');
+                isGuest = false;
+                loadLinks();
+                updateUIState();
+            });
+            return;
+        }
+        authMode = 'guest';
+        pendingAdminAction = null;
+        document.getElementById('password-input').value = '';
+        const hint = document.getElementById('password-dialog-hint');
+        if (hint) hint.textContent = '请输入访客密码以查看隐藏分类';
+        toggleOverlay('password-dialog-overlay', true);
+        setTimeout(() => { try { document.getElementById('password-input').focus(); } catch (e) { } }, 100);
+    }
+
+    function showAddDialog() {
+        toggleOverlay('dialog-overlay', true);
+        document.getElementById('name-input').value = '';
+        document.getElementById('url-input').value = '';
+        document.getElementById('tips-input').value = '';
+        document.getElementById('icon-input').value = '';
+        document.getElementById('private-checkbox').checked = false;
+        document.getElementById('category-select-value').value = '';
+        document.getElementById('category-select-text').textContent = '请选择分类';
+        const btn = document.getElementById('dialog-confirm-btn');
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.onclick = addCard;
+        document.getElementById('dialog-cancel-btn').onclick = hideAddDialog;
+    }
+
+    function showEditDialog(link) {
+        toggleOverlay('dialog-overlay', true);
+        document.getElementById('name-input').value = link.name;
+        document.getElementById('url-input').value = link.url;
+        document.getElementById('tips-input').value = link.tips || '';
+        document.getElementById('icon-input').value = link.icon || '';
+        document.getElementById('private-checkbox').checked = link.isPrivate;
+        const linkCategory = link.category || (() => {
+            for (const c in categories) if (categories[c].links.some(l => l.url === link.url)) return c;
+            return '';
+        })();
+        document.getElementById('category-select-value').value = linkCategory;
+        document.getElementById('category-select-text').textContent = linkCategory || '请选择分类';
+        const btn = document.getElementById('dialog-confirm-btn');
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.onclick = () => updateCard(link);
+        document.getElementById('dialog-cancel-btn').onclick = hideAddDialog;
+    }
+
+    function hideAddDialog() { toggleOverlay('dialog-overlay', false); }
+
+    async function submitAdminLogin(pwd) {
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pwd })
+            });
+            const data = await res.json();
+            if (data.valid) {
+                localStorage.setItem('authToken', data.token);
+                localStorage.removeItem('guestToken');
+                isLoggedIn = true;
+                isGuest = false;
+                document.getElementById('password-input').value = '';
+                toggleOverlay('password-dialog-overlay', false);
+                await loadLinks();
+                try { await pullThemeFromKv(); } catch (e) { }
+                try { await loadSiteIcon(); } catch (e) { }
+                const action = pendingAdminAction;
+                pendingAdminAction = null;
+                if (action) { action(); }
+                else { await customAlert('登录成功'); }
+            } else if (res.status === 429 && data.locked) {
+                await customAlertRateLimit(data.retryAfter || 900);
+            } else {
+                var remMsg = '密码错误';
+                var remaining = typeof data.remaining === 'number' ? data.remaining : 0;
+                if (remaining > 0) remMsg = '密码错误，还可尝试 ' + remaining + ' 次';
+                await customAlert(remMsg);
+            }
+        } catch (e) { await customAlert('Login Error'); }
+    }
+
+    async function submitGuestLogin(pwd) {
+        try {
+            const res = await fetch('/api/guestLogin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pwd })
+            });
+            const data = await res.json();
+            if (data.valid && data.token) {
+                localStorage.setItem('guestToken', data.token);
+                isGuest = true;
+                document.getElementById('password-input').value = '';
+                toggleOverlay('password-dialog-overlay', false);
+                await loadLinks();
+                updateUIState();
+                await customAlert('访客登录成功，已解锁隐藏分类');
+            } else if (res.status === 429 && data.locked) {
+                await customAlertRateLimit(data.retryAfter || 900);
+            } else if (data.error === 'GUEST_DISABLED') {
+                await customAlert('访客登录未启用');
+            } else {
+                let msg = '密码错误';
+                if (typeof data.remaining === 'number' && data.remaining > 0) msg = '密码错误，还可尝试 ' + data.remaining + ' 次';
+                await customAlert(msg);
+            }
+        } catch (e) { await customAlert('访客登录失败，请重试'); }
+    }
+
+    document.getElementById('password-confirm-btn').onclick = async () => {
+        const pwd = document.getElementById('password-input').value;
+        if (!pwd) return;
+        if (authMode === 'guest') await submitGuestLogin(pwd);
+        else await submitAdminLogin(pwd);
+    };
+
+    let _refreshing = null;
+    async function refreshOnce() {
+        if (_refreshing) return _refreshing;
+        _refreshing = (async () => {
+            const r = await fetch('/api/refreshToken', { method: 'POST', credentials: 'include' });
+            if (!r.ok) return null;
+            const data = await r.json();
+            return data && data.accessToken ? data.accessToken : null;
+        })();
+        try { return await _refreshing; }
+        finally { _refreshing = null; }
+    }
+
+    async function fetchWithAuth(url, options = {}) {
+        const adminToken = localStorage.getItem('authToken');
+        const guestToken = localStorage.getItem('guestToken');
+        const token = adminToken || guestToken;
+        const headers = { ...(options.headers || {}) };
+        if (token) headers.Authorization = token;
+        options.headers = headers;
+        let res = await fetch(url, options);
+        if (res.status === 401 && adminToken) {
+            try {
+                const fresh = await refreshOnce();
+                if (fresh) {
+                    localStorage.setItem('authToken', fresh);
+                    headers.Authorization = fresh;
+                    options.headers = headers;
+                    res = await fetch(url, options);
+                } else throw new Error('Refresh token expired');
+            } catch (refreshError) {
+                localStorage.removeItem('authToken');
+                isLoggedIn = false;
+                updateUIState();
+                renderCategories();
+                document.getElementById('password-input').value = '';
+                await customAlert('登录已过期，请重新登录');
+                throw new Error('Unauthorized');
+            }
+        }
+        return res;
+    }
+
+    document.getElementById('password-cancel-btn').onclick = () => {
+        pendingAdminAction = null;
+        toggleOverlay('password-dialog-overlay', false);
+    };
+
+    function showCategoryDialog(title, defaultVal = '') {
+        return new Promise(resolve => {
+            toggleOverlay('category-dialog', true);
+            document.getElementById('category-dialog-title').innerText = title;
+            const input = document.getElementById('category-name-input');
+            input.value = defaultVal;
+            input.focus();
+            const close = (val) => {
+                toggleOverlay('category-dialog', false);
+                document.getElementById('category-confirm-btn').onclick = null;
+                document.getElementById('category-cancel-btn').onclick = null;
+                resolve(val);
+            };
+            document.getElementById('category-confirm-btn').onclick = () => close(input.value.trim());
+            document.getElementById('category-cancel-btn').onclick = () => close(null);
+        });
+    }
+
+    function customConfirm(msg) {
+        return new Promise(resolve => {
+            toggleOverlay('custom-confirm-overlay', true);
+            document.getElementById('custom-confirm-message').innerText = msg;
+            const close = (val) => {
+                toggleOverlay('custom-confirm-overlay', false);
+                document.getElementById('custom-confirm-ok').onclick = null;
+                document.getElementById('custom-confirm-cancel').onclick = null;
+                resolve(val);
+            };
+            document.getElementById('custom-confirm-ok').onclick = () => close(true);
+            document.getElementById('custom-confirm-cancel').onclick = () => close(false);
+        });
+    }
+
+    function customAlert(msg) {
+        return new Promise(resolve => {
+            toggleOverlay('custom-alert-overlay', true);
+            document.getElementById('custom-alert-content').innerText = msg;
+            document.getElementById('custom-alert-confirm').onclick = () => {
+                toggleOverlay('custom-alert-overlay', false);
+                resolve();
+            };
+        });
+    }
+
+    function customAlertRateLimit(seconds) {
+        return new Promise(resolve => {
+            const content = document.getElementById('custom-alert-content');
+            toggleOverlay('custom-alert-overlay', true);
+            const timer = setInterval(() => {
+                if (seconds > 0) { content.innerText = '登录已被限制，请' + seconds + '秒后再试'; seconds--; }
+                else { clearInterval(timer); content.innerText = '已过限时，可重新尝试登录'; }
+            }, 1000);
+            document.getElementById('custom-alert-confirm').onclick = () => {
+                clearInterval(timer);
+                toggleOverlay('custom-alert-overlay', false);
+                resolve();
+            };
+        });
+    }
+
+    function setupTooltipDelegation() {
+        const tooltip = document.getElementById('custom-tooltip');
+        let activeTarget = null;
+        document.body.addEventListener('mousemove', (e) => {
+            const target = e.target.closest('.has-tooltip');
+            if (target) {
+                const text = target.getAttribute('data-tooltip');
+                if (text) { activeTarget = target; showTooltip(e, text); }
+                else hideTooltip();
+            } else {
+                if (activeTarget) { hideTooltip(); activeTarget = null; }
+            }
+        });
+        window.addEventListener('scroll', hideTooltip, { passive: true });
+    }
+
+    function showTooltip(e, text) {
+        const tooltip = document.getElementById('custom-tooltip');
+        tooltip.textContent = text;
+        tooltip.classList.remove('hidden');
+        const offset = 12;
+        let left = e.clientX + offset;
+        let top = e.clientY + offset;
+        const tooltipRect = tooltip.getBoundingClientRect();
+        if (left + tooltipRect.width > window.innerWidth) left = e.clientX - tooltipRect.width - offset;
+        if (top + tooltipRect.height > window.innerHeight) top = e.clientY - tooltipRect.height - offset;
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    }
+
+    function hideTooltip() {
+        const tooltip = document.getElementById('custom-tooltip');
+        if (tooltip && !tooltip.classList.contains('hidden')) tooltip.classList.add('hidden');
+    }
+
+    async function backupUserData() {
+        try {
+            const res = await fetchWithAuth('/api/backupData', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+            if (res.status === 401) { logout(); await customAlert('登录凭证已过期，请重新登录'); return false; }
+            const d = await res.json();
+            return d.success;
+        } catch (e) { return false; }
+    }
+
+    async function reloadCardsAsAdmin() { await loadLinks(); }
+
+    async function validateTokenOrRedirect() {
+        const valid = await validateToken();
+        if (!valid) { logout(); await customAlert('登录凭证已过期，请重新登录'); return false; }
+        return true;
+    }
+
+    async function validateToken() {
+        const t = localStorage.getItem('authToken');
+        if (!t) return false;
+        try {
+            const r = await fetchWithAuth('/api/validateToken');
+            return r.status === 200;
+        } catch (e) { return false; }
+    }
+
+    function logout() {
+        const t = localStorage.getItem('authToken');
+        const clean = () => { localStorage.removeItem('authToken'); localStorage.removeItem('guestToken'); isLoggedIn = false; isGuest = false; isEditMode = false; location.reload(); };
+        fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: t ? { 'Authorization': t } : {}
+        }).finally(clean);
+    }
+
+    async function exportData() {
+        if (!await validateTokenOrRedirect()) return;
+        if (!await customConfirm("确定要导出数据吗？")) return;
+        try {
+            const res = await fetchWithAuth("/api/exportData", { method: "POST" });
+            if (res.status === 401) { logout(); await customAlert('登录凭证已过期，请重新登录'); return; }
+            if (!res.ok) throw new Error("Export failed");
+            const data = await res.json();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "nav_export_" + new Date().toISOString().split("T")[0] + ".json";
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        } catch (e) { if (e.message !== 'Unauthorized') await customAlert("导出失败"); }
+    }
+
+    function parseBookmarks(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const categories = {};
+        function cleanTitle(title) {
+            const raw = (title || '').trim();
+            if (!raw) return { name: '', tips: '' };
+            if (/^https?:\/\//i.test(raw)) {
+                try {
+                    const urlObj = new URL(raw);
+                    const name = (urlObj.hostname + urlObj.pathname).replace(/\/$/, '');
+                    return { name: name || raw, tips: raw };
+                } catch (e) { return { name: raw, tips: raw }; }
+            }
+            const sep = /[|:：]|\s+[-–—]\s+/;
+            const idx = raw.search(sep);
+            if (idx === -1) return { name: raw, tips: raw };
+            const name = raw.slice(0, idx).trim();
+            const tips = raw.slice(idx).replace(/^[\s|:：–—-]+/, '').trim();
+            return { name: name || raw, tips: tips || raw };
+        }
+        function getLinks(dl) {
+            const links = [];
+            const dts = Array.from(dl.children).filter(e => e && e.tagName === 'DT');
+            for (const dt of dts) {
+                const a = dt.querySelector(':scope > a');
+                if (!a) continue;
+                const url = (a.getAttribute('href') || '').trim();
+                if (!url) continue;
+                if (/^(javascript:|vbscript:|data:|chrome:|edge:|about:|magnet:)/i.test(url)) continue;
+                const clean = cleanTitle(a.textContent);
+                links.push({ name: clean.name, url, tips: clean.tips, icon: '', category: null, isPrivate: false });
+            }
+            return links;
+        }
+        function processFolder(dl, catName) {
+            const folderDts = Array.from(dl.children).filter(e => e && e.tagName === 'DT' && e.querySelector(':scope > dl'));
+            for (const dt of folderDts) {
+                const h3 = dt.querySelector(':scope > h3');
+                const childDl = dt.querySelector(':scope > dl');
+                const subName = h3 ? h3.textContent.trim() : '未分类';
+                processFolder(childDl, subName);
+            }
+            const links = getLinks(dl);
+            if (catName && links.length) {
+                if (!categories[catName]) categories[catName] = { isHidden: false, links: [] };
+                links.forEach(l => { l.category = catName; categories[catName].links.push(l); });
+            }
+        }
+        const rootDl = doc.querySelector('dl');
+        if (!rootDl) return null;
+        const rootDts = Array.from(rootDl.children).filter(e => e && e.tagName === 'DT');
+        for (const dt of rootDts) {
+            const childDl = dt.querySelector(':scope > dl');
+            const h3 = dt.querySelector(':scope > h3');
+            if (childDl && h3) processFolder(childDl, h3.textContent.trim());
+            else {
+                const a = dt.querySelector(':scope > a');
+                if (!a) continue;
+                const url = (a.getAttribute('href') || '').trim();
+                if (!url || /^(javascript:|vbscript:|data:|chrome:|edge:|about:|magnet:)/i.test(url)) continue;
+                const clean = cleanTitle(a.textContent);
+                if (!categories['未分类']) categories['未分类'] = { isHidden: false, links: [] };
+                categories['未分类'].links.push({ name: clean.name, url, tips: clean.tips, icon: '', category: '未分类', isPrivate: false });
+            }
+        }
+        return Object.keys(categories).length ? { categories } : null;
+    }
+
+    async function importData() {
+        if (!await validateTokenOrRedirect()) return;
+        if (!await customConfirm("确定要导入数据吗？导入将覆盖现有数据！")) return;
+        const fileInput = document.getElementById('import-file-input');
+        fileInput.value = '';
+        fileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    try {
+                        const content = event.target.result;
+                        const trimmed = content.trimStart();
+                        let data;
+                        if (trimmed.startsWith('<!DOCTYPE') || /<(DL|H3)\b/i.test(trimmed)) {
+                            data = parseBookmarks(content);
+                            if (!data) throw new Error("No valid bookmarks found");
+                        } else {
+                            data = JSON.parse(content);
+                            if (typeof data !== 'object' || data === null) throw new Error("Invalid JSON");
+                        }
+                        const res = await fetchWithAuth("/api/importData", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data)
+                        });
+                        if (res.status === 401) { logout(); await customAlert('登录凭证已过期，请重新登录'); return; }
+                        if (!res.ok) throw new Error("Import failed");
+                        await customAlert('数据导入成功！');
+                        location.reload();
+                    } catch (error) {
+                        console.error("解析文件失败:", error);
+                        await customAlert('文件格式错误，请检查文件内容！');
+                    }
+                };
+                reader.readAsText(file);
+            } catch (error) {
+                console.error("导入失败:", error);
+                await customAlert('数据导入失败，请重试！');
+            }
+        };
+        fileInput.click();
+    }
+
+    </script>
+</body>
+</html>
