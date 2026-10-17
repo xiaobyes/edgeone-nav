@@ -175,7 +175,6 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 - 源项目：[lineagett/cf-workers-nav](https://github.com/lineagett/cf-workers-nav)
 - [腾讯云 EdgeOne](https://edgeone.cloud.tencent.com/)
 - [tweakcn](https://tweakcn.com)（主题库与社区主题）
-- [hmhm2022](https://github.com/hmhm2022)
 - [xinac](https://api.xinac.net/)（图标 API）
 
 ---
