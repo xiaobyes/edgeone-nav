@@ -1,5 +1,5 @@
 # 个人导航页 · EdgeOne Makers 版
-## 演示站：320826.xyz
+## 演示站：https://320826.xyz
 
 本项目基于 [lineagett/cf-workers-nav](https://github.com/lineagett/cf-workers-nav) 移植而来，源项目是一个部署在 Cloudflare Workers 上的轻量化导航页面，集成了书签管理、图标自动获取、拖拽排序、私密链接保护、主题换肤等功能。
 把原来的 Cloudflare Worker 单文件版导航站移植到腾讯云 EdgeOne Makers，并把 Workers KV 换成 EdgeOne Blob 存储。
