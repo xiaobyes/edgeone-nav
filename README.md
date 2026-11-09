@@ -3,8 +3,7 @@
 
 本项目基于 [lineagett/cf-workers-nav](https://github.com/lineagett/cf-workers-nav) 移植而来，源项目是一个部署在 Cloudflare Workers 上的轻量化导航页面，集成了书签管理、图标自动获取、拖拽排序、私密链接保护、主题换肤等功能。
 把原来的 Cloudflare Worker 单文件版导航站移植到腾讯云 EdgeOne Makers，并把 Workers KV 换成 EdgeOne Blob 存储。
-部署时把这行代码要删除，这是我的ADS代码：<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9559680426355934"
-     crossorigin="anonymous"></script>
+
 
 ---
 
@@ -170,6 +169,8 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 ### 5. 部署
 
 等待完成后打开分配的域名即可。
+部署时把这行代码要删除，这是我的ADS代码：<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9559680426355934"
+     crossorigin="anonymous"></script>
 
 ---
 
